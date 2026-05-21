@@ -541,11 +541,23 @@ function renderDag(dag, containerId) {
   }
 
   // Groepeer per tijdblok
-  const html = dagBlokken.map(b => {
+const html = dagBlokken.map(b => {
     const personen = (b.rooster_personen || []).map(p => p.naam);
-    const badge = b.voor_iedereen
-      ? `<div class="badge-iedereen">👥 Iedereen</div>`
-      : `<div class="badge-mij">★ Jouw activiteit</div>`;
+    
+    let badge = '';
+    if (b.voor_iedereen) {
+      badge = `<div class="badge-iedereen">👥 Iedereen</div>`;
+    } else {
+      // Filter jezelf eruit om te zien wie er NOG MEER bij zijn
+      const anderen = personen.filter(n => n !== huidigePersoon);
+      
+      if (anderen.length > 0) {
+        // We voegen inline 'white-space: normal' toe zodat een lange lijst namen mooi afbreekt naar een nieuwe regel
+        badge = `<div class="badge-mij" style="white-space: normal; text-align: right; max-width: 200px;">★ Met: ${anderen.join(', ')}</div>`;
+      } else {
+        badge = `<div class="badge-mij">★ Alleen jij</div>`;
+      }
+    }
 
     return `<div class="activiteit-card c-${b.kleur||'blauw'} ${b.voor_iedereen ? '' : 'voor-mij'}">
       <div class="activiteit-zijbalk"></div>
