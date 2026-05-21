@@ -261,14 +261,31 @@
 
   .loader { text-align: center; padding: 40px; color: var(--text3); font-size: 14px; }
 
+  /* Standaard verbergen we het printgebied op het scherm */
+  #print-area { display: none; }
+
   @media print {
-    body * { visibility: hidden; }
-    #print-area, #print-area * { visibility: visible; }
-    #print-area { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+    /* 1. Haal letterlijk alles in de body uit de document flow */
+    body > * { 
+      display: none !important; 
+    }
+
+    /* 2. Maak UITSLUITEND het printgebied zichtbaar in een normale flow */
+    body > #print-area { 
+      display: block !important; 
+      position: relative !important; /* Overschrijft absolute, essentieel voor correct printen! */
+      width: 100%; 
+    }
+
+    /* 3. Forceer de browser om je achtergrondkleuren mee te printen (zoals je paarse tabel headers) */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
     .print-page { page-break-after: always; padding: 20px; font-family: sans-serif; }
     .print-page:last-child { page-break-after: auto; }
   }
-  #print-area { display: none; }
 
   @media (max-width: 600px) {
     #admin-panel { width: 100%; }
