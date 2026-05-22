@@ -12,19 +12,10 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// Deze functie luistert op de achtergrond.
+// Door hier NIET self.registration.showNotification aan te roepen,
+// voorkom je de dubbele melding als de backend al een notification-object stuurt.
 messaging.onBackgroundMessage((payload) => {
-  const { title, body } = payload.notification || {};
-  self.registration.showNotification(title || 'Aristeia 2026', {
-    body: body || '',
-    icon: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
-    badge: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
-    vibrate: [200, 100, 200],
-    requireInteraction: true,
-    tag: 'aristeia-notif'
-  });
-});
-
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow(self.registration.scope));
+  console.log('Ontvangen op achtergrond:', payload);
+  // Laat Firebase zelf de melding tonen op basis van de payload (beter voor images!)
 });
