@@ -155,8 +155,8 @@
   .badge-alle     { background: var(--gold-light); color: var(--gold); border: 1px solid #f4c870; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: normal; text-align: right; max-width: 200px; align-self: center; }
 
   /* ── NOTIFICATIE MODALS ── */
-  #notif-modal, #pwa-modal, #custom-notif-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-  #notif-modal.open { display: flex; }
+  #notif-modal, #pwa-modal, #print-modal, #custom-notif-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+  #notif-modal.open, #print-modal.open { display: flex; }
   .notif-card { background: var(--bg2); border-radius: 24px; padding: 36px 32px; max-width: 420px; width: 100%; box-shadow: var(--shadow-md); border: 1px solid var(--border); text-align: center; position: relative; }
   .notif-card .notif-icon { font-size: 52px; margin-bottom: 12px; }
   .notif-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
@@ -186,7 +186,7 @@
   .select-all-row { display: flex; gap: 8px; margin-bottom: 4px; }
   .btn-xs { font-size: 11px; padding: 4px 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); cursor: pointer; font-weight: 500; }
   .btn-save { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
-  .admin-section-title { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;}
+  .admin-section-title { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
   .admin-blok-item { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
   .admin-blok-info { flex: 1; font-size: 13px; font-weight: 500; }
   .admin-blok-info span { color: var(--text2); font-size: 11px; font-weight: 400; }
@@ -194,8 +194,6 @@
   .btn-edit { background: none; border: none; color: var(--accent); font-size: 14px; cursor: pointer; padding: 4px; }
 
   /* ── PRINT MODAL ── */
-  #print-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
-  #print-modal.open { display: flex; }
   .print-card { background: var(--bg2); border-radius: 20px; padding: 28px; max-width: 480px; width: 100%; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
   .print-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
   .print-card p { color: var(--text2); font-size: 13px; margin-bottom: 14px; }
@@ -284,9 +282,7 @@
     <button class="admin-close" onclick="toggleAdmin()">×</button>
   </div>
   <div class="admin-body">
-    <div class="admin-section-title">
-      Nieuw blok toevoegen / bewerken
-    </div>
+    <div class="admin-section-title">Nieuw blok toevoegen / bewerken</div>
     <div class="form-group"><label>Titel *</label><input type="text" id="f-titel" placeholder="bv. Koken"></div>
     <div class="form-row">
       <div class="form-group"><label>Datum *</label><input type="date" id="f-datum"></div>
@@ -304,50 +300,56 @@
     </div>
     <button class="btn-save" id="save-btn" onclick="slaBlokOp()">💾 Opslaan</button>
     
-    <div class="admin-section-title" style="margin-top: 15px;">
-      Bestaande blokken
-      <button class="btn-xs" onclick="openNotificatieModal()" style="background: var(--accent); color: white; border: none;">📢 Stuur Notificatie</button>
+    <div class="admin-section-title" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: none; padding-bottom: 0;">
+      <button onclick="openCustomNotifModal()" style="background: var(--accent); color: white; border: none; padding: 16px 24px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(92, 59, 204, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
+        <span style="font-size: 18px;">📢</span> Handmatig Notificatie Sturen
+      </button>
+      <div style="font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; width: 100%; margin-top: 10px;">
+        Bestaande blokken
+      </div>
     </div>
+
     <div id="admin-blok-list"><div class="loader">Laden…</div></div>
   </div>
 </div>
 
-<div id="custom-notif-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
-  <div style="background: var(--bg2); width: 100%; max-width: 440px; padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow-md); margin: 16px;">
+<div id="custom-notif-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px;">
+  <div class="notif-card" style="text-align: left;">
+    <button onclick="sluitCustomNotifModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: var(--text2); cursor: pointer;">&times;</button>
     <h3 style="margin-top: 0; color: var(--text); font-size: 19px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">📢 Pushbericht Verzenden</h3>
     
-    <div style="margin-bottom: 14px;">
-      <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text2);">Doelgroep</label>
-      <select id="notif-doelgroep" onchange="toggleNotifNaamVeld()" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px;">
+    <div class="form-group">
+      <label>Doelgroep</label>
+      <select id="c-notif-doelgroep" onchange="toggleCustomNotifNaam()" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; outline: none;">
         <option value="iedereen">Iedereen (Alle actieve apparaten)</option>
         <option value="specifiek">Specifiek persoon</option>
       </select>
     </div>
 
-    <div id="notif-naam-container" style="margin-bottom: 14px; display: none;">
-      <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text2);">Naam van persoon</label>
-      <select id="notif-naam" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); font-size: 14px;">
+    <div class="form-group" id="c-notif-naam-container" style="display: none;">
+      <label>Naam Ontvanger</label>
+      <select id="c-notif-naam" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; outline: none;">
         </select>
     </div>
 
-    <div style="margin-bottom: 14px;">
-      <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text2);">Titel *</label>
-      <input type="text" id="notif-titel" placeholder="Bijv. Belangrijke wijziging!" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg2); color: var(--text);">
+    <div class="form-group">
+      <label>Titel *</label>
+      <input type="text" id="c-notif-titel" placeholder="Bijv. Belangrijke wijziging!" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
     </div>
 
-    <div style="margin-bottom: 14px;">
-      <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text2);">Bericht tekst *</label>
-      <textarea id="notif-body" placeholder="Typ hier de inhoud van je pushmelding..." rows="3" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); resize: vertical; font-family: inherit; font-size: 14px; background: var(--bg2); color: var(--text);"></textarea>
+    <div class="form-group">
+      <label>Bericht tekst *</label>
+      <textarea id="c-notif-body" placeholder="Typ hier de inhoud van je pushmelding..." rows="3" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); resize: vertical; font-family: inherit; font-size: 14px; background: var(--bg3); color: var(--text); outline: none;"></textarea>
     </div>
 
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text2);">Afbeelding URL (Optioneel)</label>
-      <input type="url" id="notif-afbeelding" placeholder="https://site.com/plaatje.jpg" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg2); color: var(--text);">
+    <div class="form-group" style="margin-bottom: 20px;">
+      <label>Afbeelding URL (Optioneel)</label>
+      <input type="url" id="c-notif-afbeelding" placeholder="https://.../logo.png" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
     </div>
 
-    <div style="display: flex; justify-content: flex-end; gap: 10px;">
-      <button onclick="sluitNotificatieModal()" style="background: var(--bg3); color: var(--text2); border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Annuleren</button>
-      <button id="btn-stuur-notif" onclick="verstuurAangepasteNotificatie()" style="background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Verzenden</button>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-notif-nee" onclick="sluitCustomNotifModal()" style="flex: 1; margin: 0;">Annuleren</button>
+      <button class="btn-notif-ja" id="btn-stuur-c-notif" onclick="verstuurCustomNotificatie()" style="flex: 1; margin: 0; padding: 12px;">🚀 Verzenden</button>
     </div>
   </div>
 </div>
@@ -855,68 +857,74 @@ async function verwijderBlok(id) {
 }
 
 // ── HANDMATIGE NOTIFICATIES (NIEUW) ──
-function openNotificatieModal() {
+function openCustomNotifModal() {
   document.getElementById('custom-notif-modal').style.display = 'flex';
+  document.getElementById('c-notif-titel').value = '';
+  document.getElementById('c-notif-body').value = '';
+  document.getElementById('c-notif-afbeelding').value = '';
+  document.getElementById('c-notif-doelgroep').value = 'iedereen';
   
-  // Velden resetten
-  document.getElementById('notif-titel').value = '';
-  document.getElementById('notif-body').value = '';
-  document.getElementById('notif-afbeelding').value = '';
-  document.getElementById('notif-doelgroep').value = 'iedereen';
-  
-  // Selecteer namen invullen
-  document.getElementById('notif-naam').innerHTML = '<option value="">Kies persoon...</option>' + 
+  const naamSelect = document.getElementById('c-notif-naam');
+  naamSelect.innerHTML = '<option value="">Kies persoon...</option>' + 
     NAMEN.map(n => `<option value="${n}">${n}</option>`).join('');
-    
-  toggleNotifNaamVeld();
+  toggleCustomNotifNaam();
 }
 
-function sluitNotificatieModal() {
+function sluitCustomNotifModal() {
   document.getElementById('custom-notif-modal').style.display = 'none';
 }
 
-function toggleNotifNaamVeld() {
-  const dg = document.getElementById('notif-doelgroep').value;
-  document.getElementById('notif-naam-container').style.display = dg === 'specifiek' ? 'block' : 'none';
+function toggleCustomNotifNaam() {
+  const dg = document.getElementById('c-notif-doelgroep').value;
+  document.getElementById('c-notif-naam-container').style.display = dg === 'specifiek' ? 'block' : 'none';
 }
 
-async function verstuurAangepasteNotificatie() {
-  const doelgroep = document.getElementById('notif-doelgroep').value;
-  const naam = document.getElementById('notif-naam').value.trim();
-  const titel = document.getElementById('notif-titel').value.trim();
-  const body = document.getElementById('notif-body').value.trim();
-  const afbeelding = document.getElementById('notif-afbeelding').value.trim();
+async function verstuurCustomNotificatie() {
+  const doelgroep = document.getElementById('c-notif-doelgroep').value;
+  const naam = document.getElementById('c-notif-naam').value;
+  const titel = document.getElementById('c-notif-titel').value.trim();
+  const body = document.getElementById('c-notif-body').value.trim();
+  const afbeelding = document.getElementById('c-notif-afbeelding').value.trim();
 
-  if (!titel || !body) { alert('Titel en bericht zijn verplicht!'); return; }
-  if (doelgroep === 'specifiek' && !naam) { alert('Kies een naam voor de specifieke ontvanger!'); return; }
+  if (!titel || !body) { showToast('Titel en bericht zijn verplicht!', true); return; }
+  if (doelgroep === 'specifiek' && !naam) { showToast('Kies een ontvanger!', true); return; }
 
-  const btn = document.getElementById('btn-stuur-notif');
+  const btn = document.getElementById('btn-stuur-c-notif');
   btn.disabled = true;
   btn.innerText = 'Verzenden...';
 
   try {
-    // !! LET OP: Controleer of deze URL klopt met de naam van jouw function in Supabase !!
     const EDGE_FUNCTION_URL = 'https://tuualasepvtlgclxqpeu.supabase.co/functions/v1/send-notifications'; 
     
     const response = await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ actie: 'handmatig', doelgroep, naam, titel, body, afbeelding: afbeelding || null })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SB_KEY
+      },
+      body: JSON.stringify({ 
+        actie: 'handmatig', 
+        doelgroep, 
+        naam, 
+        titel, 
+        body, 
+        afbeelding: afbeelding || null 
+      })
     });
 
     const result = await response.json();
     if (response.ok && result.ok) {
-      alert(`✅ Succes: ${result.msg}`);
-      sluitNotificatieModal();
+      showToast(`✅ Succes: ${result.msg}`);
+      sluitCustomNotifModal();
     } else {
-      alert(`❌ Fout: ${result.error || result.msg || 'Er ging iets mis.'}`);
+      showToast(`❌ Fout: ${result.error || result.msg}`, true);
     }
   } catch (error) {
-    console.error(error);
-    alert('Netwerkfout bij het verbinden met de Edge Function. Kijk in de console (F12).');
+    console.error('Verzendfout:', error);
+    showToast('Netwerkfout bij Edge Function (zie console).', true);
   } finally {
     btn.disabled = false;
-    btn.innerText = 'Verzenden';
+    btn.innerText = '🚀 Verzenden';
   }
 }
 
