@@ -363,6 +363,17 @@
 <div id="print-area"></div>
 <div class="toast" id="toast"></div>
 
+<div id="pwa-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px;">
+  <div class="notif-card" style="position: relative;">
+    <button onclick="document.getElementById('pwa-modal').style.display='none'" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: var(--text2); cursor: pointer;">&times;</button>
+    <div class="notif-icon">📱</div>
+    <h3>App Installeren</h3>
+    <p>Om notificaties te ontvangen, moet je Aristeia als app op je telefoon zetten.</p>
+    <div id="pwa-instructies" style="text-align: left; background: var(--bg3); padding: 16px; border-radius: 12px; font-size: 14px; margin-top: 16px; line-height: 1.5;">
+      </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 <script>
@@ -472,10 +483,163 @@ function startApp() {
     `<option value="${n}" ${n===huidigePersoon?'selected':''}>${n}</option>`).join('');
   vulAdminCheckboxes();
   laadRooster();
+  
   if (pollInterval) clearInterval(pollInterval);
   pollInterval = setInterval(laadRooster, 30000);
-  // Na auto-login ook notificaties controleren
-  setTimeout(controleerNotificaties, 1200);
+  
+  // Controleer notificaties en ververs token stilletjes op de achtergrond
+  setTimeout(() => {
+    controleerNotificaties();
+    verversTokenAchtergrond();
+  }, 1200);
+}
+
+function controleerNotificaties() {
+  // 1. Check of de browser/het OS notificaties überhaupt ondersteunt
+  if (!('Notification' in window)) {
+    toonPwaInstructies();
+    return;
+  }
+
+  // 2. Toon popup als permission niet granted is, of als we nog geen token hebben opgeslagen
+  const heeftToken = localStorage.getItem('aristeia_notif_ok') === huidigePersoon;
+  if (Notification.permission !== 'granted' || !heeftToken) {
+    document.getElementById('notif-naam-display').textContent  = huidigePersoon;
+    document.getElementById('notif-naam-display2').textContent = huidigePersoon;
+    document.getElementById('notif-modal').classList.add('open');
+  }
+}
+
+function toonPwaInstructies() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const instructiesDiv = document.getElementById('pwa-instructies');
+  
+  if (isIOS) {
+    instructiesDiv.innerHTML = `
+      <strong>Voor iPhone / iPad:</strong><br><br>
+      1. Tik op het deel-icoontje <span style="font-size:18px">⍗</span> onderin je scherm (vierkant met pijl omhoog).<br>
+      2. Scroll naar beneden en kies <strong>'Zet op beginscherm'</strong> of <strong>'Add to Home Screen'</strong>.<br>
+      3. Open Aristeia daarna vanaf je beginscherm om notificaties aan te zetten!
+    `;
+  } else {
+    instructiesDiv.innerHTML = `
+      <strong>Voor Android:</strong><br><br>
+      1. Tik op de drie puntjes <span style="font-size:18px">⋮</span> rechtsboven in je browser.<br>
+      2. Kies <strong>'App installeren'</strong> of <strong>'Toevoegen aan startscherm'</strong>.<br>
+      3. Open de app vanaf je beginscherm om notificaties in te schakelen.
+    `;
+  }
+  
+  // Sluit eventueel de andere modal en open de PWA modal
+  document.getElementById('notif-modal').classList.remove('open');
+  document.getElementById('pwa-modal').style.display = 'flex';
+}
+
+// Haalt geruisloos het huidige token op en controleert of deze in de database staat
+async function verversTokenAchtergrond() {
+  if (!messaging || !('Notification' in window) || Notification.permission !== 'granted') return;
+  
+  try {
+    const tokenOpts = { vapidKey: VAPID_KEY };
+    if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
+    
+    const huidigToken = await messaging.getToken(tokenOpts);
+    if (!huidigToken) return;
+
+    // We gebruiken POST. Zorg dat je in Supabase op de tabel 'fcm_tokens' 
+    // een UNIQUE constraint hebt op de kolom 'token'. 
+    // Zo niet, voer dan eerst een snelle DELETE uit en dan een POST om dubbele te voorkomen.
+    await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(huidigToken), 'DELETE').catch(() => {});
+    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken });
+    
+    // Zeker weten dat de localstorage up-to-date is met de huidige naam
+    localStorage.setItem('aristeia_notif_ok', huidigePersoon);
+    
+  } catch (e) {
+    console.warn('Achtergrond token refresh mislukt:', e);
+  }
+}function startApp() {
+  toonScherm('app-screen');
+  if (isAdmin) document.getElementById('admin-btn').style.display = '';
+  document.getElementById('persoon-select').innerHTML = NAMEN.map(n =>
+    `<option value="${n}" ${n===huidigePersoon?'selected':''}>${n}</option>`).join('');
+  vulAdminCheckboxes();
+  laadRooster();
+  
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(laadRooster, 30000);
+  
+  // Controleer notificaties en ververs token stilletjes op de achtergrond
+  setTimeout(() => {
+    controleerNotificaties();
+    verversTokenAchtergrond();
+  }, 1200);
+}
+
+function controleerNotificaties() {
+  // 1. Check of de browser/het OS notificaties überhaupt ondersteunt
+  if (!('Notification' in window)) {
+    toonPwaInstructies();
+    return;
+  }
+
+  // 2. Toon popup als permission niet granted is, of als we nog geen token hebben opgeslagen
+  const heeftToken = localStorage.getItem('aristeia_notif_ok') === huidigePersoon;
+  if (Notification.permission !== 'granted' || !heeftToken) {
+    document.getElementById('notif-naam-display').textContent  = huidigePersoon;
+    document.getElementById('notif-naam-display2').textContent = huidigePersoon;
+    document.getElementById('notif-modal').classList.add('open');
+  }
+}
+
+function toonPwaInstructies() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const instructiesDiv = document.getElementById('pwa-instructies');
+  
+  if (isIOS) {
+    instructiesDiv.innerHTML = `
+      <strong>Voor iPhone / iPad:</strong><br><br>
+      1. Tik op het deel-icoontje <span style="font-size:18px">⍗</span> onderin je scherm (vierkant met pijl omhoog).<br>
+      2. Scroll naar beneden en kies <strong>'Zet op beginscherm'</strong> of <strong>'Add to Home Screen'</strong>.<br>
+      3. Open Aristeia daarna vanaf je beginscherm om notificaties aan te zetten!
+    `;
+  } else {
+    instructiesDiv.innerHTML = `
+      <strong>Voor Android:</strong><br><br>
+      1. Tik op de drie puntjes <span style="font-size:18px">⋮</span> rechtsboven in je browser.<br>
+      2. Kies <strong>'App installeren'</strong> of <strong>'Toevoegen aan startscherm'</strong>.<br>
+      3. Open de app vanaf je beginscherm om notificaties in te schakelen.
+    `;
+  }
+  
+  // Sluit eventueel de andere modal en open de PWA modal
+  document.getElementById('notif-modal').classList.remove('open');
+  document.getElementById('pwa-modal').style.display = 'flex';
+}
+
+// Haalt geruisloos het huidige token op en controleert of deze in de database staat
+async function verversTokenAchtergrond() {
+  if (!messaging || !('Notification' in window) || Notification.permission !== 'granted') return;
+  
+  try {
+    const tokenOpts = { vapidKey: VAPID_KEY };
+    if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
+    
+    const huidigToken = await messaging.getToken(tokenOpts);
+    if (!huidigToken) return;
+
+    // We gebruiken POST. Zorg dat je in Supabase op de tabel 'fcm_tokens' 
+    // een UNIQUE constraint hebt op de kolom 'token'. 
+    // Zo niet, voer dan eerst een snelle DELETE uit en dan een POST om dubbele te voorkomen.
+    await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(huidigToken), 'DELETE').catch(() => {});
+    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken });
+    
+    // Zeker weten dat de localstorage up-to-date is met de huidige naam
+    localStorage.setItem('aristeia_notif_ok', huidigePersoon);
+    
+  } catch (e) {
+    console.warn('Achtergrond token refresh mislukt:', e);
+  }
 }
 
 function wisselPersoon(naam) {
@@ -486,16 +650,6 @@ function wisselPersoon(naam) {
 // ── NOTIFICATIES ──
 // Controleer elke keer dat de app opent of notificaties nog steeds aan staan
 // Als niet: toon de popup opnieuw
-function controleerNotificaties() {
-  if (!messaging || !('Notification' in window)) return;
-  // Toon popup als permission niet granted is, of als we nog geen token hebben opgeslagen
-  const heeftToken = localStorage.getItem('aristeia_notif_ok') === huidigePersoon;
-  if (Notification.permission !== 'granted' || !heeftToken) {
-    document.getElementById('notif-naam-display').textContent  = huidigePersoon;
-    document.getElementById('notif-naam-display2').textContent = huidigePersoon;
-    document.getElementById('notif-modal').classList.add('open');
-  }
-}
 
 async function vraagNotificaties() {
   document.getElementById('notif-modal').classList.remove('open');
