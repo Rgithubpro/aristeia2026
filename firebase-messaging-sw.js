@@ -12,22 +12,21 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  const { title, body, image } = payload.notification || {};
-  
-  // Handmatige afhandeling zorgt voor juiste weergave van afbeeldingen
+// Onderschep ALLE push events zelf, zodat Firebase niets automatisch toont
+self.addEventListener('push', (event) => {
+  const payload = event.data?.json() ?? {};
+  const notification = payload.notification || payload.data || {};
+
+  const title = notification.title || 'Aristeia 2026';
   const options = {
-    body: body || '',
+    body: notification.body || '',
     icon: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
     badge: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
     vibrate: [200, 100, 200],
     requireInteraction: true,
-    tag: 'aristeia-notification' // Tag zorgt ervoor dat nieuwe meldingen oude overschrijven i.p.v. stapelen
+    tag: 'aristeia-notification'
   };
+  if (notification.image) options.image = notification.image;
 
-  if (image) {
-    options.image = image;
-  }
-
-  return self.registration.showNotification(title || 'Aristeia 2026', options);
+  event.waitUntil(self.registration.showNotification(title, options));
 });
