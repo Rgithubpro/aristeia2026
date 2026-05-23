@@ -43,26 +43,14 @@
   .login-card input[type=password]:focus { border-color: var(--accent2); }
 
   /* ── CHECKBOX FIX ── */
-  .onthoud-label {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px; font-size: 13px; color: var(--text2);
-    cursor: pointer; text-align: left; padding: 2px 0;
-  }
-  .onthoud-label input[type=checkbox] {
-    width: 16px; height: 16px; flex-shrink: 0;
-    accent-color: var(--accent); cursor: pointer; margin: 0;
-  }
-
+  .onthoud-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 13px; color: var(--text2); cursor: pointer; text-align: left; padding: 2px 0; }
+  .onthoud-label input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; margin: 0; }
   .btn-primary { width: 100%; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; }
   .btn-primary:hover { background: var(--gold); }
   .login-error { color: #e74c3c; font-size: 13px; margin-top: 10px; display: none; }
 
   /* Papel picado */
-  .papel-picado {
-    width: 100%; height: 16px; overflow: hidden; flex-shrink: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='16'%3E%3Cpolygon points='0,0 10,0 5,16' fill='%23e8850a'/%3E%3Cpolygon points='10,0 20,0 15,16' fill='%235c3bcc'/%3E%3Cpolygon points='20,0 30,0 25,16' fill='%23e74c3c'/%3E%3Cpolygon points='30,0 40,0 35,16' fill='%2327ae60'/%3E%3Cpolygon points='40,0 50,0 45,16' fill='%23f4a832'/%3E%3Cpolygon points='50,0 60,0 55,16' fill='%238e44ad'/%3E%3C/svg%3E");
-    background-repeat: repeat-x; background-size: 60px 16px;
-  }
+  .papel-picado { width: 100%; height: 16px; overflow: hidden; flex-shrink: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='16'%3E%3Cpolygon points='0,0 10,0 5,16' fill='%23e8850a'/%3E%3Cpolygon points='10,0 20,0 15,16' fill='%235c3bcc'/%3E%3Cpolygon points='20,0 30,0 25,16' fill='%23e74c3c'/%3E%3Cpolygon points='30,0 40,0 35,16' fill='%2327ae60'/%3E%3Cpolygon points='40,0 50,0 45,16' fill='%23f4a832'/%3E%3Cpolygon points='50,0 60,0 55,16' fill='%238e44ad'/%3E%3C/svg%3E"); background-repeat: repeat-x; background-size: 60px 16px; }
 
   /* ── NAAM KIEZEN ── */
   #naam-screen { align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, #f5f0ff 0%, #fff4e0 100%); }
@@ -113,25 +101,10 @@
   .activiteit-card.voor-mij { border-color: var(--accent2); }
 
   /* ── HUIDIGE ACTIVITEIT ── */
-  .activiteit-card.huidig {
-    border-color: var(--green) !important;
-    box-shadow: 0 0 0 3px rgba(22,163,74,0.20), var(--shadow-md);
-    animation: groene-gloed 2.5s ease-in-out infinite;
-  }
-  @keyframes groene-gloed {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.18), 0 4px 20px rgba(0,0,0,0.12); }
-    50%       { box-shadow: 0 0 0 5px rgba(22,163,74,0.35), 0 4px 20px rgba(0,0,0,0.12); }
-  }
-  .huidig-badge {
-    position: absolute; top: 8px; right: 10px;
-    background: var(--green); color: white;
-    font-size: 10px; font-weight: 700; border-radius: 20px;
-    padding: 2px 9px; letter-spacing: 0.3px;
-    animation: badge-pulse 2.5s ease-in-out infinite;
-  }
-  @keyframes badge-pulse {
-    0%,100%{opacity:1} 50%{opacity:.7}
-  }
+  .activiteit-card.huidig { border-color: var(--green) !important; box-shadow: 0 0 0 3px rgba(22,163,74,0.20), var(--shadow-md); animation: groene-gloed 2.5s ease-in-out infinite; }
+  @keyframes groene-gloed { 0%, 100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.18), 0 4px 20px rgba(0,0,0,0.12); } 50% { box-shadow: 0 0 0 5px rgba(22,163,74,0.35), 0 4px 20px rgba(0,0,0,0.12); } }
+  .huidig-badge { position: absolute; top: 8px; right: 10px; background: var(--green); color: white; font-size: 10px; font-weight: 700; border-radius: 20px; padding: 2px 9px; letter-spacing: 0.3px; animation: badge-pulse 2.5s ease-in-out infinite; }
+  @keyframes badge-pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
 
   .activiteit-zijbalk { width: 6px; flex-shrink: 0; }
   .c-blauw  .activiteit-zijbalk { background: #4a90d9; }
@@ -156,7 +129,7 @@
 
   /* ── MODALS ── */
   #notif-modal, #pwa-modal, #print-modal, #custom-notif-modal, #persoon-info-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-  #notif-modal.open, #print-modal.open { display: flex; }
+  #notif-modal.open, #print-modal.open, #persoon-info-modal.open { display: flex; }
   .notif-card { background: var(--bg2); border-radius: 24px; padding: 36px 32px; max-width: 420px; width: 100%; box-shadow: var(--shadow-md); border: 1px solid var(--border); text-align: center; position: relative; }
   .notif-card .notif-icon { font-size: 52px; margin-bottom: 12px; }
   .notif-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
@@ -301,6 +274,32 @@
     </div>
     <button class="btn-save" id="save-btn" onclick="slaBlokOp()">💾 Opslaan</button>
     
+    <div class="admin-section-title" style="margin-top: 20px;">Dagbericht Instellen</div>
+    <div class="form-group">
+      <label>Kies Dag</label>
+      <select id="admin-dag-select" onchange="laadSpecifiekDagBericht()">
+        <option value="">Kies dag...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Bericht</label>
+      <input type="text" id="admin-dag-bericht" placeholder="Bijv. 08:30 aanwezig zijn">
+    </div>
+    <button class="btn-save" onclick="slaDagBerichtOp()">💾 Dagbericht Opslaan</button>
+
+    <div class="admin-section-title" style="margin-top: 20px;">Persoonlijke Rol / Info Instellen</div>
+    <div class="form-group">
+      <label>Kies Persoon</label>
+      <select id="admin-persoon-select" onchange="laadSpecifiekPersoonVariabele()">
+        <option value="">Kies persoon...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Rol / Variabele</label>
+      <input type="text" id="admin-persoon-variabele" placeholder="Bijv. Dood of levend verkleed">
+    </div>
+    <button class="btn-save" onclick="slaPersoonVariabeleOp()">💾 Rol Opslaan</button>
+
     <div class="admin-section-title" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: none; padding-bottom: 0;">
       <button onclick="openCustomNotifModal()" style="background: var(--accent); color: white; border: none; padding: 16px 24px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(92, 59, 204, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
         <span style="font-size: 18px;">📢</span> Handmatig Notificatie Sturen
@@ -533,7 +532,7 @@ function startApp() {
 function wisselPersoon(naam) {
   huidigePersoon = naam;
   renderRooster();
-  checkPersoonPopup(huidigePersoon); // Checkt of er een nieuwe rol gepopt moet worden bij wisselen
+  checkPersoonPopup(huidigePersoon); 
 }
 
 // ── DEVICE DETECTIE ──
@@ -680,13 +679,26 @@ function bepaalUniekeDagen() {
   uniekeDagen.sort((a, b) => geefDatumSorteerWaarde(a.datum) - geefDatumSorteerWaarde(b.datum));
 }
 
-// ── NIEUW: PERSOONLIJKE INFO CHECKEN ──
+// ── EXTRA SUPABASE DATA (BERICHTEN & ROLLEN) ──
+async function laadExtraSupabaseData() {
+  try {
+    const dbRes = await sbFetch('/dag_berichten?select=*');
+    dagBerichten = dbRes || [];
+  } catch(e) { console.warn("Kon dag_berichten niet ophalen", e); }
+
+  try {
+    const pvRes = await sbFetch('/persoon_variabelen?select=*');
+    persoonVariabelen = pvRes || [];
+    checkPersoonPopup(huidigePersoon);
+  } catch(e) { console.warn("Kon persoon_variabelen niet ophalen", e); }
+}
+
+// ── PERSOONLIJKE INFO CHECKEN ──
 function checkPersoonPopup(naam) {
   if (!naam || persoonVariabelen.length === 0) return;
   const info = persoonVariabelen.find(p => p.naam.toLowerCase() === naam.toLowerCase());
   
   if (info && info.variabele) {
-    // Check of we deze melding al hebben laten zien in deze sessie
     if (!sessionStorage.getItem('rol_gezien_' + naam)) {
       document.getElementById('persoon-info-tekst').innerHTML = info.variabele;
       document.getElementById('persoon-info-modal').classList.add('open');
@@ -699,19 +711,7 @@ function checkPersoonPopup(naam) {
 async function laadRooster() {
   try {
     alleBlokken = await sbFetch('/rooster_blokken?select=*,rooster_personen(naam)&order=tijd_start');
-    
-    // Probeer de extra data in te laden (zonder dat het rooster crasht als ze leeg zijn)
-    try {
-      const dbRes = await sbFetch('/dag_berichten?select=*');
-      dagBerichten = dbRes || [];
-    } catch(e) { console.warn("Kon dag_berichten niet ophalen", e); }
-    
-    try {
-      const pvRes = await sbFetch('/persoon_variabelen?select=*');
-      persoonVariabelen = pvRes || [];
-      checkPersoonPopup(huidigePersoon);
-    } catch(e) { console.warn("Kon persoon_variabelen niet ophalen", e); }
-
+    await laadExtraSupabaseData(); // Nieuwe extra data helper aanroepen
     bepaalUniekeDagen();
     renderRooster();
     toonAllePersoonVariabelen();
@@ -748,7 +748,7 @@ function renderRooster() {
     const containerId = `inhoud-${sleutel.replace('|', '_')}`;
     const sfeeremoji = ud.dag === 'Donderdag' ? '💀' : (ud.dag === 'Vrijdag' ? '🌼' : '🎭');
     
-    // Haal het dynamische bericht op, of val terug op standaardtekst
+    // Dynamisch bericht uit de database halen
     const berichtMatch = dagBerichten.find(db => db.dag === ud.dag && db.datum === ud.datum);
     const subTekst = (berichtMatch && berichtMatch.bericht) ? berichtMatch.bericht : "08:30 aanwezig zijn";
     
@@ -821,8 +821,10 @@ function renderDag(dag, datum, containerId) {
 
 function toonAllePersoonVariabelen() {
   const container = document.getElementById('allen-variabelen-container');
-  if (!container || !persoonVariabelen || persoonVariabelen.length === 0) {
-    if(container) container.innerHTML = '';
+  if (!container) return;
+
+  if (!persoonVariabelen || persoonVariabelen.length === 0) {
+    container.innerHTML = '';
     return;
   }
 
@@ -859,11 +861,33 @@ function toggleFilter() {
 }
 
 // ── ADMIN ──
-function toggleAdmin() { document.getElementById('admin-panel').classList.toggle('open'); }
+function toggleAdmin() { 
+  const panel = document.getElementById('admin-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    vulAdminExtraSelects();
+  }
+}
+
 function vulAdminCheckboxes() {
   document.getElementById('personen-checkboxes').innerHTML = NAMEN.map(n=>
     `<label class="checkbox-item"><input type="checkbox" name="persoon" value="${n}"> ${n}</label>`).join('');
 }
+
+function vulAdminExtraSelects() {
+  // Vul select voor de persoon variabelen
+  const pSelect = document.getElementById('admin-persoon-select');
+  if (pSelect && pSelect.options.length <= 1) {
+    pSelect.innerHTML = '<option value="">Kies persoon...</option>' + NAMEN.map(n => `<option value="${n}">${n}</option>`).join('');
+  }
+  
+  // Vul select voor de dag berichten
+  const dSelect = document.getElementById('admin-dag-select');
+  if (dSelect && uniekeDagen.length > 0) {
+    dSelect.innerHTML = '<option value="">Kies dag...</option>' + uniekeDagen.map(ud => `<option value="${ud.dag}|${ud.datum}">${ud.dag} ${ud.datum}</option>`).join('');
+  }
+}
+
 function selectAllPersonen(val) { document.querySelectorAll('#personen-checkboxes input').forEach(cb=>cb.checked=val); }
 
 async function slaBlokOp() {
@@ -946,6 +970,59 @@ async function verwijderBlok(id) {
   if(!confirm('Weet je zeker dat je dit blok wil verwijderen?')) return;
   try { await sbFetch(`/rooster_blokken?id=eq.${id}`,'DELETE'); showToast('Verwijderd'); await laadRooster(); }
   catch(e) { showToast('Fout: '+e.message,true); }
+}
+
+// ── ADMIN: DAG BERICHTEN & PERSOON VARIABELEN ──
+function laadSpecifiekDagBericht() {
+  const val = document.getElementById('admin-dag-select').value;
+  if(!val) return;
+  const [dag, datum] = val.split('|');
+  const match = dagBerichten.find(b => b.dag === dag && b.datum === datum);
+  document.getElementById('admin-dag-bericht').value = match ? match.bericht : '';
+}
+
+async function slaDagBerichtOp() {
+  const val = document.getElementById('admin-dag-select').value;
+  const bericht = document.getElementById('admin-dag-bericht').value.trim();
+  if(!val) return showToast('Kies eerst een dag', true);
+  const [dag, datum] = val.split('|');
+
+  try {
+    const match = dagBerichten.find(b => b.dag === dag && b.datum === datum);
+    if (match) {
+      await sbFetch(`/dag_berichten?id=eq.${match.id}`, 'PATCH', { bericht });
+    } else {
+      await sbFetch(`/dag_berichten`, 'POST', { dag, datum, bericht });
+    }
+    showToast('Dagbericht opgeslagen!');
+    await laadExtraSupabaseData(); // Herlaad extra data
+    renderRooster(); // Update de UI
+  } catch(e) { showToast('Fout: ' + e.message, true); }
+}
+
+function laadSpecifiekPersoonVariabele() {
+  const naam = document.getElementById('admin-persoon-select').value;
+  if(!naam) return;
+  const match = persoonVariabelen.find(p => p.naam === naam);
+  document.getElementById('admin-persoon-variabele').value = match ? match.variabele : '';
+}
+
+async function slaPersoonVariabeleOp() {
+  const naam = document.getElementById('admin-persoon-select').value;
+  const variabele = document.getElementById('admin-persoon-variabele').value.trim();
+  if(!naam) return showToast('Kies eerst een persoon', true);
+
+  try {
+    const match = persoonVariabelen.find(p => p.naam === naam);
+    if (match) {
+      await sbFetch(`/persoon_variabelen?id=eq.${match.id}`, 'PATCH', { variabele });
+    } else {
+      await sbFetch(`/persoon_variabelen`, 'POST', { naam, variabele });
+    }
+    showToast('Rol opgeslagen!');
+    await laadExtraSupabaseData();
+    toonAllePersoonVariabelen();
+  } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
 // ── HANDMATIGE NOTIFICATIES ──
