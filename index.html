@@ -287,23 +287,18 @@
     </div>
     <button class="btn-save" onclick="slaDagBerichtOp()">💾 Dagbericht Opslaan</button>
 
-    <div class="admin-section-title" style="margin-top: 20px;">Dagberichten Beheer</div>
+    <div class="admin-section-title" style="margin-top: 20px;">Persoonlijke Rol / Info Instellen</div>
     <div class="form-group">
-      <label>Dag (bijv. Vrijdag)</label>
-      <input type="text" id="admin-dag-input" placeholder="Vrijdag">
+      <label>Kies Persoon</label>
+      <select id="admin-persoon-select" onchange="laadSpecifiekPersoonVariabele()">
+        <option value="">Kies persoon...</option>
+      </select>
     </div>
     <div class="form-group">
-      <label>Datum (bijv. 29 mei)</label>
-      <input type="text" id="admin-datum-input" placeholder="29 mei">
+      <label>Rol / Variabele</label>
+      <input type="text" id="admin-persoon-variabele" placeholder="Bijv. Dood of levend verkleed">
     </div>
-    <div class="form-group">
-      <label>Bericht</label>
-      <textarea id="admin-dag-bericht" placeholder="Typ hier de instructies voor deze dag..."></textarea>
-    </div>
-    <button class="btn-save" onclick="slaDagBerichtOp()">💾 Bericht opslaan</button>
-    
-    <div id="admin-dag-lijst" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
-      </div>
+    <button class="btn-save" onclick="slaPersoonVariabeleOp()">💾 Rol Opslaan</button>
 
     <div class="admin-section-title" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: none; padding-bottom: 0;">
       <button onclick="openCustomNotifModal()" style="background: var(--accent); color: white; border: none; padding: 16px 24px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(92, 59, 204, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
@@ -986,51 +981,22 @@ function laadSpecifiekDagBericht() {
   document.getElementById('admin-dag-bericht').value = match ? match.bericht : '';
 }
 
-// Opslaan of Updaten van een dagbericht
 async function slaDagBerichtOp() {
-  const dag = document.getElementById('admin-dag-input').value.trim();
-  const datum = document.getElementById('admin-datum-input').value.trim();
+  const val = document.getElementById('admin-dag-select').value;
   const bericht = document.getElementById('admin-dag-bericht').value.trim();
-  
-  if (!dag || !datum) { showToast('Vul dag en datum in!', true); return; }
+  if(!val) return showToast('Kies eerst een dag', true);
+  const [dag, datum] = val.split('|');
 
   try {
-    // Check of er al een bericht is voor deze dag/datum combinatie
-    const bestaand = dagBerichten.find(b => b.dag === dag && b.datum === datum);
-    
-    if (bestaand) {
-      await sbFetch(`/dag_berichten?id=eq.${bestaand.id}`, 'PATCH', { bericht });
+    const match = dagBerichten.find(b => b.dag === dag && b.datum === datum);
+    if (match) {
+      await sbFetch(`/dag_berichten?id=eq.${match.id}`, 'PATCH', { bericht });
     } else {
-      await sbFetch('/dag_berichten', 'POST', { dag, datum, bericht });
+      await sbFetch(`/dag_berichten`, 'POST', { dag, datum, bericht });
     }
-    
     showToast('Dagbericht opgeslagen!');
-    document.getElementById('admin-dag-bericht').value = ''; // Leeg veld
-    await laadExtraSupabaseData();
-    renderDagBerichtenLijst(); // Nieuwe functie om lijst te tonen
-  } catch(e) { showToast('Fout: ' + e.message, true); }
-}
-
-// Lijst tonen in admin zodat je ze ook weer kunt verwijderen
-function renderDagBerichtenLijst() {
-  const container = document.getElementById('admin-dag-lijst');
-  container.innerHTML = dagBerichten.map(b => `
-    <div class="admin-blok-item">
-      <div class="admin-blok-info">
-        <strong>${b.dag} ${b.datum}</strong><br>
-        <span style="color:var(--text)">${b.bericht}</span>
-      </div>
-      <button class="btn-del" onclick="verwijderDagBericht('${b.id}')">🗑️</button>
-    </div>
-  `).join('');
-}
-
-async function verwijderDagBericht(id) {
-  try {
-    await sbFetch(`/dag_berichten?id=eq.${id}`, 'DELETE');
-    showToast('Bericht verwijderd');
-    await laadExtraSupabaseData();
-    renderDagBerichtenLijst();
+    await laadExtraSupabaseData(); // Herlaad extra data
+    renderRooster(); // Update de UI
   } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
