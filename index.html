@@ -246,7 +246,7 @@
     <div id="roosters-container">
       <div class="loader">Rooster laden…</div>
     </div>
-    <div id="allen-variabelen-container"></div>
+    <div id="persoon-variabele-container"></div>
   </div>
 </div>
 
@@ -344,12 +344,12 @@
 
     <div class="form-group" style="margin-bottom: 20px;">
       <label>Afbeelding URL (Optioneel)</label>
-      <input type="url" id="c-notif-afbeelding" placeholder="https://.../logo.png" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
+      <input type="url" id="c-notif-afbeelding" placeholder="https://site.com/plaatje.jpg" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
     </div>
 
-    <div style="display: flex; gap: 10px;">
-      <button class="btn-notif-nee" onclick="sluitCustomNotifModal()" style="flex: 1; margin: 0;">Annuleren</button>
-      <button class="btn-notif-ja" id="btn-stuur-c-notif" onclick="verstuurCustomNotificatie()" style="flex: 1; margin: 0; padding: 12px;">🚀 Verzenden</button>
+    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+      <button onclick="sluitCustomNotifModal()" style="background: var(--bg3); color: var(--text2); border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Annuleren</button>
+      <button id="btn-stuur-c-notif" onclick="verstuurCustomNotificatie()" style="background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Verzenden</button>
     </div>
   </div>
 </div>
@@ -457,7 +457,7 @@ let editId = null;
 let toonAlles = false;
 let pollInterval = null;
 
-// NIEUWE STATE VOOR BERICHTEN & ROLLEN
+// VOOR BERICHTEN & ROLLEN
 let dagBerichten = [];
 let persoonVariabelen = [];
 
@@ -532,19 +532,8 @@ function startApp() {
 function wisselPersoon(naam) {
   huidigePersoon = naam;
   renderRooster();
-  checkPersoonPopup(huidigePersoon); 
-}
-
-// ── DEVICE DETECTIE ──
-function getDeviceType() {
-  const ua = navigator.userAgent;
-  if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
-  if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) return 'iOS (iPad)';
-  if (/Android/i.test(ua)) return 'Android';
-  if (/Macintosh|Mac OS X/i.test(ua)) return 'Macbook';
-  if (/Windows/i.test(ua)) return 'Windows';
-  if (/Linux/i.test(ua)) return 'Linux';
-  return 'Onbekend';
+  toonHuidigePersoonVariabele(); // Laad variabele van de persoon die je bekijkt
+  checkPersoonPopup(huidigePersoon); // Check voor popup (wordt alleen getoond als het je EIGEN naam is)
 }
 
 // ── NOTIFICATIES & PWA ──
@@ -585,10 +574,8 @@ async function vraagNotificaties() {
     if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
 
     const token = await messaging.getToken(tokenOpts);
-    const deviceName = getDeviceType();
-
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(token), 'DELETE').catch(() => {});
-    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: token, device: deviceName });
+    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token });
 
     localStorage.setItem('aristeia_notif_ok', huidigePersoon);
     showToast('✓ Meldingen ingeschakeld voor ' + huidigePersoon + '!');
@@ -611,10 +598,8 @@ async function verversTokenAchtergrond() {
     const huidigToken = await messaging.getToken(tokenOpts);
     if (!huidigToken) return;
 
-    const deviceName = getDeviceType();
-
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(huidigToken), 'DELETE').catch(() => {});
-    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken, device: deviceName });
+    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken });
     localStorage.setItem('aristeia_notif_ok', huidigePersoon);
   } catch (e) {
     console.warn('Achtergrond token refresh mislukt:', e);
@@ -679,44 +664,54 @@ function bepaalUniekeDagen() {
   uniekeDagen.sort((a, b) => geefDatumSorteerWaarde(a.datum) - geefDatumSorteerWaarde(b.datum));
 }
 
-// ── EXTRA SUPABASE DATA (BERICHTEN & ROLLEN) ──
-async function laadExtraSupabaseData() {
-  try {
-    const dbRes = await sbFetch('/dag_berichten?select=*');
-    dagBerichten = dbRes || [];
-  } catch(e) { console.warn("Kon dag_berichten niet ophalen", e); }
+// ── PERSOONLIJKE ROL POPUP ──
+function checkPersoonPopup(geselecteerdeNaam) {
+  if (!geselecteerdeNaam || persoonVariabelen.length === 0) return;
+  
+  const loggedInNaam = localStorage.getItem('aristeia_naam');
+  if (!loggedInNaam) return;
 
-  try {
-    const pvRes = await sbFetch('/persoon_variabelen?select=*');
-    persoonVariabelen = pvRes || [];
-    checkPersoonPopup(huidigePersoon);
-  } catch(e) { console.warn("Kon persoon_variabelen niet ophalen", e); }
-}
+  // We tonen de popup ALLEEN als de persoon naar zijn eigen rooster kijkt of net inlogt.
+  if (geselecteerdeNaam.toLowerCase() !== loggedInNaam.toLowerCase()) return;
 
-// ── PERSOONLIJKE INFO CHECKEN ──
-function checkPersoonPopup(naam) {
-  if (!naam || persoonVariabelen.length === 0) return;
-  const info = persoonVariabelen.find(p => p.naam.toLowerCase() === naam.toLowerCase());
+  const info = persoonVariabelen.find(p => p.naam.toLowerCase() === loggedInNaam.toLowerCase());
   
   if (info && info.variabele) {
-    if (!sessionStorage.getItem('rol_gezien_' + naam)) {
+    // Alleen tonen als het nog niet in deze sessie is weggeklikt
+    if (!sessionStorage.getItem('rol_gezien_' + loggedInNaam)) {
       document.getElementById('persoon-info-tekst').innerHTML = info.variabele;
       document.getElementById('persoon-info-modal').classList.add('open');
-      sessionStorage.setItem('rol_gezien_' + naam, 'true');
+      sessionStorage.setItem('rol_gezien_' + loggedInNaam, 'true');
     }
   }
 }
 
-// ── DATA OP HALEN EN RENDEREN ──
+// ── DATA ──
 async function laadRooster() {
   try {
     alleBlokken = await sbFetch('/rooster_blokken?select=*,rooster_personen(naam)&order=tijd_start');
-    await laadExtraSupabaseData(); // Nieuwe extra data helper aanroepen
+    
+    // Haal extra data op (maar laat het rooster niet crashen als de tabel leeg is)
+    try {
+      const dbRes = await sbFetch('/dag_berichten?select=*');
+      dagBerichten = dbRes || [];
+    } catch(e) { console.warn("Kon dag_berichten niet ophalen"); }
+    
+    try {
+      const pvRes = await sbFetch('/persoon_variabelen?select=*');
+      persoonVariabelen = pvRes || [];
+      // Controleer direct na het laden voor de ingelogde persoon
+      checkPersoonPopup(huidigePersoon);
+    } catch(e) { console.warn("Kon persoon_variabelen niet ophalen"); }
+
     bepaalUniekeDagen();
     renderRooster();
-    toonAllePersoonVariabelen();
-    
-    if (isAdmin) renderAdminLijst();
+    toonHuidigePersoonVariabele();
+
+    if (isAdmin) {
+      renderAdminLijst();
+      vulAdminExtraSelects();
+    }
   } catch(e) { console.error('Rooster laden mislukt:', e); }
 }
 
@@ -745,22 +740,20 @@ function renderRooster() {
   document.getElementById('roosters-container').innerHTML = uniekeDagen.map(ud => {
     const sleutel = `${ud.dag}|${ud.datum}`;
     const isActief = sleutel === actieveDagSleutel;
-    const containerId = `inhoud-${sleutel.replace('|', '_')}`;
     const sfeeremoji = ud.dag === 'Donderdag' ? '💀' : (ud.dag === 'Vrijdag' ? '🌼' : '🎭');
     
-    // Dynamisch bericht uit de database halen
     const berichtMatch = dagBerichten.find(db => db.dag === ud.dag && db.datum === ud.datum);
     const subTekst = (berichtMatch && berichtMatch.bericht) ? berichtMatch.bericht : "08:30 aanwezig zijn";
-    
+
     return `<div id="rooster-${sleutel.replace('|', '_')}" class="dag-rooster ${isActief ? 'active' : ''}">
       <div class="dag-banner">
         <div class="dag-banner-icon">${sfeeremoji}</div>
         <div>
           <div class="dag-banner-titel">${ud.dag} ${ud.datum} 2026</div>
-          <div class="dag-banner-sub"><strong>${subTekst}</strong></div>
+          <div class="dag-banner-sub">${subTekst}</div>
         </div>
       </div>
-      <div id="${containerId}"><div class="loader">Laden…</div></div>
+      <div id="inhoud-${sleutel.replace('|', '_')}"><div class="loader">Laden…</div></div>
     </div>`;
   }).join('');
 
@@ -819,8 +812,9 @@ function renderDag(dag, datum, containerId) {
   }).join('');
 }
 
-function toonAllePersoonVariabelen() {
-  const container = document.getElementById('allen-variabelen-container');
+// ── ROL ONDERAAN TONEN ──
+function toonHuidigePersoonVariabele() {
+  const container = document.getElementById('persoon-variabele-container');
   if (!container) return;
 
   if (!persoonVariabelen || persoonVariabelen.length === 0) {
@@ -828,23 +822,22 @@ function toonAllePersoonVariabelen() {
     return;
   }
 
-  let html = `
+  // Toont de rol/variabele van degene die in het rooster (dropdown) is geselecteerd
+  const pv = persoonVariabelen.find(p => p.naam.toLowerCase() === huidigePersoon.toLowerCase());
+
+  if (!pv || !pv.variabele) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = `
     <div style="background: var(--bg2); padding: 16px; border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);">
-      <h3 style="margin-top:0; color:var(--accent); font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><span>🎭</span> Rollen & Info van Anderen</h3>
-      <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
-  `;
-
-  persoonVariabelen.forEach(pv => {
-    html += `
-      <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 10px; background: var(--bg3); border-radius: 8px;">
-        <strong style="color: var(--text);">${pv.naam}</strong> 
-        <span style="color: var(--text2); text-align: right;">${pv.variabele || '–'}</span>
+      <h3 style="margin-top:0; color:var(--accent); font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><span>🎭</span> Rol / Info voor ${pv.naam}</h3>
+      <div style="font-size: 14px; padding: 12px; background: var(--bg3); border-radius: 8px; color: var(--text); font-weight: 500;">
+        ${pv.variabele}
       </div>
-    `;
-  });
-
-  html += `</div></div>`;
-  container.innerHTML = html;
+    </div>
+  `;
 }
 
 function switchDag(sleutel) {
@@ -875,13 +868,11 @@ function vulAdminCheckboxes() {
 }
 
 function vulAdminExtraSelects() {
-  // Vul select voor de persoon variabelen
   const pSelect = document.getElementById('admin-persoon-select');
   if (pSelect && pSelect.options.length <= 1) {
     pSelect.innerHTML = '<option value="">Kies persoon...</option>' + NAMEN.map(n => `<option value="${n}">${n}</option>`).join('');
   }
   
-  // Vul select voor de dag berichten
   const dSelect = document.getElementById('admin-dag-select');
   if (dSelect && uniekeDagen.length > 0) {
     dSelect.innerHTML = '<option value="">Kies dag...</option>' + uniekeDagen.map(ud => `<option value="${ud.dag}|${ud.datum}">${ud.dag} ${ud.datum}</option>`).join('');
@@ -995,8 +986,11 @@ async function slaDagBerichtOp() {
       await sbFetch(`/dag_berichten`, 'POST', { dag, datum, bericht });
     }
     showToast('Dagbericht opgeslagen!');
-    await laadExtraSupabaseData(); // Herlaad extra data
-    renderRooster(); // Update de UI
+    
+    // Herlaad
+    const dbRes = await sbFetch('/dag_berichten?select=*');
+    dagBerichten = dbRes || [];
+    renderRooster(); 
   } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
@@ -1020,8 +1014,11 @@ async function slaPersoonVariabeleOp() {
       await sbFetch(`/persoon_variabelen`, 'POST', { naam, variabele });
     }
     showToast('Rol opgeslagen!');
-    await laadExtraSupabaseData();
-    toonAllePersoonVariabelen();
+    
+    // Herlaad
+    const pvRes = await sbFetch('/persoon_variabelen?select=*');
+    persoonVariabelen = pvRes || [];
+    toonHuidigePersoonVariabele();
   } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
