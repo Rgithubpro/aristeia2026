@@ -12,11 +12,27 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  const { title, body, image } = payload.data || {};
+// Lege handler — dit voorkomt dat Firebase zijn eigen showNotification aanroept
+// maar geeft jou via de native push listener de volledige controle
+messaging.onBackgroundMessage(() => {});
+
+// Jij handelt alles zelf af via de native push listener
+self.addEventListener('push', (event) => {
+  let title = 'Aristeia 2026';
+  let body = '';
+  let image = null;
+
+  try {
+    const payload = event.data.json();
+    // Werkt zowel met notification payload (dashboard) als data payload (jouw edge function)
+    const n = payload.notification || payload.data || {};
+    title = n.title || title;
+    body = n.body || body;
+    image = n.image || null;
+  } catch(e) {}
 
   const options = {
-    body: body || '',
+    body,
     icon: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
     badge: 'https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png',
     vibrate: [200, 100, 200],
@@ -25,5 +41,5 @@ messaging.onBackgroundMessage((payload) => {
   };
   if (image) options.image = image;
 
-  return self.registration.showNotification(title || 'Aristeia 2026', options);
+  event.waitUntil(self.registration.showNotification(title, options));
 });
