@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aristeia 2026 – Rooster</title>
 <link rel="icon" type="image/png" href="https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png">
+<link rel="manifest" href="./manifest.json">
 <style>
   :root {
     --bg: #f5f5f7;
@@ -244,7 +245,7 @@
   <div class="naam-card">
     <h2>Wie ben jij? 👋</h2>
     <p>Kies je naam om je persoonlijke rooster te zien.</p>
-    <div class="naam-waarschuwing">⚠️ <strong>Let op:</strong> Je naam wordt opgeslagen op dit apparaat en gekoppeld aan je notificaties. Kies goed — je kunt dit niet makkelijk wijzigen!</div>
+    <div class="naam-waarschuwing">⚠️ <strong>Let op:</strong> Je naam wordt opgeslagen op dit apparaat og gekoppeld aan je notificaties. Kies goed — je kunt dit niet makkelijk wijzigen!</div>
     <div class="naam-grid" id="naam-grid"></div>
   </div>
 </div>
@@ -330,7 +331,7 @@
     <div class="form-group" id="c-notif-naam-container" style="display: none;">
       <label>Naam Ontvanger</label>
       <select id="c-notif-naam" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; outline: none;">
-        </select>
+      </select>
     </div>
 
     <div class="form-group">
@@ -359,7 +360,7 @@
   <div class="notif-card">
     <div class="notif-icon">🔔</div>
     <h3>Meldingen inschakelen?</h3>
-    <p>Ontvang <strong>5 minuten van tevoren</strong> een melding voor elke activiteit die bij jou hoort — ook als de app gesloten is.</p>
+    <p>Ontvang <strong>5 minutes van tevoren</strong> een melding voor elke activiteit die bij jou hoort — ook als de app gesloten is.</p>
     <div class="notif-naam-highlight" id="notif-naam-display">...</div>
     <p style="font-size:13px;color:var(--text2)">Dit apparaat wordt geregistreerd voor <strong id="notif-naam-display2">...</strong>.<br>Je kunt meerdere apparaten koppelen aan dezelfde naam.</p>
     <div class="notif-warning" style="margin-top:12px">⚠️ Zorg dat je de juiste naam hebt gekozen in het vorige scherm!</div>
@@ -438,7 +439,7 @@ if (messaging) {
   });
 }
 
-// ── SERVICE WORKER REGISTRATIE ──
+// ── SERVICE WORKER ──
 let swRegistration = null;
 if ('serviceWorker' in navigator) {
   const swUrl   = new URL('./firebase-messaging-sw.js', location.href).href;
@@ -458,11 +459,10 @@ let editId = null;
 let toonAlles = false;
 let pollInterval = null;
 
-// NIEUWE STATE VOOR BERICHTEN & ROLLEN
 let dagBerichten = [];
 let persoonVariabelen = [];
 
-// ── SUPABASE ──
+// ── SUPABASE FETCH ──
 async function sbFetch(path, method='GET', body=null) {
   const opts = { method, headers: { apikey: SB_KEY, Authorization: 'Bearer '+SB_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' } };
   if (body) opts.body = JSON.stringify(body);
@@ -530,11 +530,12 @@ function startApp() {
   }, 1200);
 }
 
+// WISEL VAN ROOSTER -> UPDATE DE LOCALE ROL ONDERAAN MEE!
 function wisselPersoon(naam) {
   huidigePersoon = naam;
   renderRooster();
-  toonHuidigePersoonVariabele(); // Update the variable box below the roster
-  checkPersoonPopup(huidigePersoon); // Checkt of er een nieuwe rol gepopt moet worden bij wisselen
+  toonHuidigePersoonVariabele(); 
+  checkPersoonPopup(huidigePersoon); 
 }
 
 // ── DEVICE DETECTIE ──
@@ -555,10 +556,11 @@ function controleerNotificaties() {
     toonPwaInstructies();
     return;
   }
-  const heeftToken = localStorage.getItem('aristeia_notif_ok') === huidigePersoon;
+  const loggedInNaam = localStorage.getItem('aristeia_naam') || huidigePersoon;
+  const heeftToken = localStorage.getItem('aristeia_notif_ok') === loggedInNaam;
   if (Notification.permission !== 'granted' || !heeftToken) {
-    document.getElementById('notif-naam-display').textContent  = huidigePersoon;
-    document.getElementById('notif-naam-display2').textContent = huidigePersoon;
+    document.getElementById('notif-naam-display').textContent  = loggedInNaam;
+    document.getElementById('notif-naam-display2').textContent = loggedInNaam;
     document.getElementById('notif-modal').classList.add('open');
   }
 }
@@ -578,6 +580,7 @@ function toonPwaInstructies() {
 
 async function vraagNotificaties() {
   document.getElementById('notif-modal').classList.remove('open');
+  const loggedInNaam = localStorage.getItem('aristeia_naam') || huidigePersoon;
   try {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') { showToast('Meldingen niet toegestaan', true); return; }
@@ -590,10 +593,10 @@ async function vraagNotificaties() {
     const deviceName = getDeviceType();
 
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(token), 'DELETE').catch(() => {});
-    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: token, device: deviceName });
+    await sbFetch('/fcm_tokens', 'POST', { naam: loggedInNaam, token: token, device: deviceName });
 
-    localStorage.setItem('aristeia_notif_ok', huidigePersoon);
-    showToast('✓ Meldingen ingeschakeld voor ' + huidigePersoon + '!');
+    localStorage.setItem('aristeia_notif_ok', loggedInNaam);
+    showToast('✓ Meldingen ingeschakeld voor ' + loggedInNaam + '!');
   } catch(e) {
     console.error('FCM token error:', e);
     showToast('Kon meldingen niet instellen: ' + e.message, true);
@@ -606,6 +609,7 @@ function slaNotificatiesOver() {
 
 async function verversTokenAchtergrond() {
   if (!messaging || !('Notification' in window) || Notification.permission !== 'granted') return;
+  const loggedInNaam = localStorage.getItem('aristeia_naam') || huidigePersoon;
   try {
     const tokenOpts = { vapidKey: VAPID_KEY };
     if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
@@ -616,14 +620,14 @@ async function verversTokenAchtergrond() {
     const deviceName = getDeviceType();
 
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(huidigToken), 'DELETE').catch(() => {});
-    await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken, device: deviceName });
-    localStorage.setItem('aristeia_notif_ok', huidigePersoon);
+    await sbFetch('/fcm_tokens', 'POST', { naam: loggedInNaam, token: huidigToken, device: deviceName });
+    localStorage.setItem('aristeia_notif_ok', loggedInNaam);
   } catch (e) {
     console.warn('Achtergrond token refresh mislukt:', e);
   }
 }
 
-// ── EMOJI ──
+// ── ROOSTER ENGINE LOGICA ──
 function getEmoji(titel) {
   const t = titel.toLowerCase();
   if (t.includes('muziek')||t.includes('optreden')||t.includes('song')) return '🎸';
@@ -647,7 +651,6 @@ function getEmoji(titel) {
   return '🌼';
 }
 
-// ── HUIDIGE ACTIVITEIT (DYNAMISCH) ──
 function isHuidig(tijdStart, tijdEind, dag, datum) {
   const now = new Date();
   const ams = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }));
@@ -681,27 +684,25 @@ function bepaalUniekeDagen() {
   uniekeDagen.sort((a, b) => geefDatumSorteerWaarde(a.datum) - geefDatumSorteerWaarde(b.datum));
 }
 
-// ── NIEUW: PERSOONLIJKE INFO CHECKEN ──
 function checkPersoonPopup(naam) {
   if (!naam || persoonVariabelen.length === 0) return;
-  const info = persoonVariabelen.find(p => p.naam.toLowerCase() === naam.toLowerCase());
-  
+  const loggedInNaam = localStorage.getItem('aristeia_naam') || huidigePersoon;
+  if (naam.toLowerCase() !== loggedInNaam.toLowerCase()) return; 
+
+  const info = persoonVariabelen.find(p => p.naam.toLowerCase() === loggedInNaam.toLowerCase());
   if (info && info.variabele) {
-    // Check of we deze melding al hebben laten zien in deze sessie
-    if (!sessionStorage.getItem('rol_gezien_' + naam)) {
+    if (!sessionStorage.getItem('rol_gezien_' + loggedInNaam)) {
       document.getElementById('persoon-info-tekst').innerHTML = info.variabele;
       document.getElementById('persoon-info-modal').classList.add('open');
-      sessionStorage.setItem('rol_gezien_' + naam, 'true');
+      sessionStorage.setItem('rol_gezien_' + loggedInNaam, 'true');
     }
   }
 }
 
-// ── DATA OP HALEN EN RENDEREN ──
 async function laadRooster() {
   try {
     alleBlokken = await sbFetch('/rooster_blokken?select=*,rooster_personen(naam)&order=tijd_start');
     
-    // Probeer de extra data in te laden (zonder dat het rooster crasht als ze leeg zijn)
     try {
       const dbRes = await sbFetch('/dag_berichten?select=*');
       dagBerichten = dbRes || [];
@@ -710,12 +711,13 @@ async function laadRooster() {
     try {
       const pvRes = await sbFetch('/persoon_variabelen?select=*');
       persoonVariabelen = pvRes || [];
-      checkPersoonPopup(huidigePersoon);
+      const loggedInNaam = localStorage.getItem('aristeia_naam') || huidigePersoon;
+      checkPersoonPopup(loggedInNaam);
     } catch(e) { console.warn("Kon persoon_variabelen niet ophalen", e); }
 
     bepaalUniekeDagen();
     renderRooster();
-    toonHuidigePersoonVariabele(); // Toon info alleen voor huidigePersoon
+    toonHuidigePersoonVariabele(); 
     
     if (isAdmin) renderAdminLijst();
   } catch(e) { console.error('Rooster laden mislukt:', e); }
@@ -746,10 +748,8 @@ function renderRooster() {
   document.getElementById('roosters-container').innerHTML = uniekeDagen.map(ud => {
     const sleutel = `${ud.dag}|${ud.datum}`;
     const isActief = sleutel === actieveDagSleutel;
-    const containerId = `inhoud-${sleutel.replace('|', '_')}`;
     const sfeeremoji = ud.dag === 'Donderdag' ? '💀' : (ud.dag === 'Vrijdag' ? '🌼' : '🎭');
     
-    // Haal het dynamische bericht op, of val terug op standaardtekst
     const berichtMatch = dagBerichten.find(db => db.dag === ud.dag && db.datum === ud.datum);
     const subTekst = (berichtMatch && berichtMatch.bericht) ? berichtMatch.bericht : "08:30 aanwezig zijn";
     
@@ -761,13 +761,12 @@ function renderRooster() {
           <div class="dag-banner-sub"><strong>${subTekst}</strong></div>
         </div>
       </div>
-      <div id="${containerId}"><div class="loader">Laden…</div></div>
+      <div id="inhoud-${sleutel.replace('|', '_')}"><div class="loader">Laden…</div></div>
     </div>`;
   }).join('');
 
   uniekeDagen.forEach(ud => {
-    const containerId = `inhoud-${`${ud.dag}|${ud.datum}`.replace('|', '_')}`;
-    renderDag(ud.dag, ud.datum, containerId);
+    renderDag(ud.dag, ud.datum, `inhoud-${`${ud.dag}|${ud.datum}`.replace('|', '_')}`);
   });
 }
 
@@ -820,7 +819,7 @@ function renderDag(dag, datum, containerId) {
   }).join('');
 }
 
-// ── TOON ROL/INFO VAN DE GESELECTEERDE PERSOON ──
+// ── TOON ROL VAN DE HUIDIG GESELECTEERDE PERSOON ONDERAAN ──
 function toonHuidigePersoonVariabele() {
   const container = document.getElementById('persoon-variabele-container');
   if (!container || !persoonVariabelen || persoonVariabelen.length === 0) {
@@ -828,15 +827,14 @@ function toonHuidigePersoonVariabele() {
     return;
   }
 
-  // Zoek de info op die hoort bij de persoon in de huidige dropdown
   const pv = persoonVariabelen.find(p => p.naam.toLowerCase() === huidigePersoon.toLowerCase());
 
   if (!pv || !pv.variabele) {
-    container.innerHTML = ''; // Maak leeg als er geen info is
+    container.innerHTML = ''; 
     return;
   }
 
-  let html = `
+  container.innerHTML = `
     <div style="background: var(--bg2); padding: 16px; border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);">
       <h3 style="margin-top:0; color:var(--accent); font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><span>🎭</span> Rol / Info voor ${pv.naam}</h3>
       <div style="font-size: 14px; padding: 12px; background: var(--bg3); border-radius: 8px; color: var(--text); font-weight: 500;">
@@ -844,7 +842,6 @@ function toonHuidigePersoonVariabele() {
       </div>
     </div>
   `;
-  container.innerHTML = html;
 }
 
 function switchDag(sleutel) {
@@ -860,7 +857,7 @@ function toggleFilter() {
   renderRooster();
 }
 
-// ── ADMIN ──
+// ── ADMIN PANEL CRUD ──
 function toggleAdmin() { document.getElementById('admin-panel').classList.toggle('open'); }
 function vulAdminCheckboxes() {
   document.getElementById('personen-checkboxes').innerHTML = NAMEN.map(n=>
@@ -950,7 +947,7 @@ async function verwijderBlok(id) {
   catch(e) { showToast('Fout: '+e.message,true); }
 }
 
-// ── HANDMATIGE NOTIFICATIES ──
+// ── HANDMATIGE PUSH NOTIFICATIES ──
 function openCustomNotifModal() {
   document.getElementById('custom-notif-modal').style.display = 'flex';
   document.getElementById('c-notif-titel').value = '';
@@ -1015,14 +1012,14 @@ async function verstuurCustomNotificatie() {
     }
   } catch (error) {
     console.error('Verzendfout:', error);
-    showToast('Netwerkfout bij Edge Function (zie console).', true);
+    showToast('Netwerkfout bij Edge Function.', true);
   } finally {
     btn.disabled = false;
     btn.innerText = '🚀 Verzenden';
   }
 }
 
-// ── PRINT ──
+// ── PRINT SYSTEEM ──
 function openPrintModal() {
   document.getElementById('print-names').innerHTML = NAMEN.map(n=>
     `<label class="checkbox-item"><input type="checkbox" class="print-cb" value="${n}" ${n===huidigePersoon?'checked':''}> ${n}</label>`).join('');
@@ -1075,7 +1072,7 @@ function maakPrintPagina(naam, dag, datum) {
   </div>`;
 }
 
-// ── TOAST ──
+// ── TOAST MESSAGES ──
 function showToast(msg, error=false) {
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast'+(error?' error':'');
