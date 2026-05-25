@@ -130,10 +130,20 @@
   .btn-terug:hover { border-color: var(--accent2); color: var(--accent); }
   .info-container { padding: 20px; flex: 1; max-width: 720px; margin: 0 auto; width: 100%; }
   .artikel-card { background: var(--bg2); border-radius: var(--radius); border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 18px; }
-  .artikel-afbeelding { width: 100%; max-height: 280px; object-fit: cover; display: block; }
+  
+  /* AANGEPAST: Object fit is nu contain en heeft een pointer cursor */
+  .artikel-afbeelding { width: 100%; max-height: 280px; object-fit: contain; background: var(--bg3); display: block; cursor: zoom-in; }
+  
   .artikel-body { padding: 18px 20px; }
   .artikel-titel { font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
-  .artikel-tekst { font-size: 14px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; }
+  .artikel-tekst { font-size: 14px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  
+  /* NIEUW: iframe opmaak (zodat Excel/Word embeds netjes eruitzien) */
+  .artikel-tekst iframe { max-width: 100%; border-radius: var(--radius-sm); margin: 10px 0; border: 1px solid var(--border); display: block; }
+  /* NIEUW: Custom styling voor de klikbare links */
+  .custom-link { color: var(--accent); font-weight: 600; text-decoration: underline; cursor: pointer; }
+  .custom-link:hover { color: var(--accent2); }
+
   .artikel-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
   .artikel-datum { font-size: 11px; color: var(--text3); }
   .artikel-admin-btns { display: flex; gap: 8px; }
@@ -158,6 +168,14 @@
   /* ── MODALS ── */
   #notif-modal, #pwa-modal, #print-modal, #custom-notif-modal, #persoon-info-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
   #notif-modal.open, #print-modal.open, #persoon-info-modal.open { display: flex; }
+  
+  /* NIEUW: Image modal CSS */
+  #image-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; flex-direction: column; }
+  #image-modal.open { display: flex; }
+  #image-modal img { max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+  .close-image-btn { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 26px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .close-image-btn:hover { background: rgba(255,255,255,0.4); }
+  
   .notif-card { background: var(--bg2); border-radius: 24px; padding: 36px 32px; max-width: 420px; width: 100%; box-shadow: var(--shadow-md); border: 1px solid var(--border); text-align: center; position: relative; }
   .notif-card .notif-icon { font-size: 52px; margin-bottom: 12px; }
   .notif-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
@@ -232,7 +250,6 @@
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
 <div id="login-screen" class="screen active">
   <div class="login-card">
     <img class="login-logo" src="https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/logo" alt="Logo"
@@ -249,7 +266,6 @@
   </div>
 </div>
 
-<!-- ── NAAM KIEZEN ── -->
 <div id="naam-screen" class="screen">
   <div class="naam-card">
     <h2>Wie ben jij? 👋</h2>
@@ -259,7 +275,6 @@
   </div>
 </div>
 
-<!-- ── APP SCREEN ── -->
 <div id="app-screen" class="screen">
   <div class="app-header">
     <img class="header-logo" src="https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png" alt="Logo">
@@ -286,7 +301,6 @@
   </div>
 </div>
 
-<!-- ── INFO SCREEN ── -->
 <div id="info-screen" class="screen">
   <div class="info-header">
     <button class="btn-terug" onclick="sluitInfoScreen()">← Terug</button>
@@ -302,7 +316,6 @@
   </div>
 </div>
 
-<!-- ── ARTIKEL EDITOR MODAL ── -->
 <div id="artikel-modal">
   <div class="artikel-editor">
     <h3 id="artikel-modal-titel">✏️ Nieuw Artikel</h3>
@@ -314,7 +327,7 @@
 
     <div class="form-group" style="margin-bottom:12px">
       <label>Tekst *</label>
-      <textarea id="a-tekst" rows="6" placeholder="Schrijf hier de inhoud van je artikel..." style="resize:vertical;width:100%;padding:10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:inherit;font-size:13px;outline:none;"></textarea>
+      <textarea id="a-tekst" rows="6" placeholder="Schrijf hier de inhoud... (of plak hier je embed code / linkjes)" style="resize:vertical;width:100%;padding:10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:inherit;font-size:13px;outline:none;"></textarea>
     </div>
 
     <div class="form-group" style="margin-bottom:4px">
@@ -351,7 +364,24 @@
   </div>
 </div>
 
-<!-- ── ADMIN PANEL ── -->
+<div id="image-modal">
+  <button class="close-image-btn" onclick="sluitImageModal()">&times;</button>
+  <img id="image-modal-img" src="" alt="Volledige afbeelding">
+</div>
+
+<div id="link-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:900; align-items:center; justify-content:center; padding:20px;">
+  <div class="notif-card" style="text-align:center; max-width:400px;">
+    <div class="notif-icon">🔗</div>
+    <h3>Externe Link</h3>
+    <p>Wil je doorgaan naar deze site?</p>
+    <p style="font-size:12px; background:var(--bg3); padding:8px; border-radius:8px; word-break:break-all; color:var(--text2); margin-bottom:20px;" id="link-modal-url"></p>
+    <div style="display:flex; gap:10px;">
+      <button onclick="sluitLinkModal()" class="btn-notif-nee" style="flex:1;">Annuleren</button>
+      <button id="btn-link-doorgaan" class="btn-notif-ja" style="flex:1;">Ja, ga door</button>
+    </div>
+  </div>
+</div>
+
 <div id="admin-panel">
   <div class="admin-header">
     <h3>⚙️ Admin – Rooster beheren</h3>
@@ -414,7 +444,6 @@
   </div>
 </div>
 
-<!-- ── CUSTOM NOTIFICATIE MODAL ── -->
 <div id="custom-notif-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px;">
   <div class="notif-card" style="text-align:left;max-width:480px;">
     <button onclick="sluitCustomNotifModal()" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
@@ -440,7 +469,6 @@
       <textarea id="c-notif-body" placeholder="Typ hier de inhoud van je pushmelding..." rows="3" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);resize:vertical;font-family:inherit;font-size:14px;background:var(--bg3);color:var(--text);outline:none;"></textarea>
     </div>
 
-    <!-- Afbeelding: upload of URL -->
     <div class="form-group" style="margin-bottom:4px">
       <label style="font-size:12px;color:var(--text2);font-weight:600;">Afbeelding uploaden (optioneel)</label>
       <div class="upload-zone" onclick="document.getElementById('c-notif-upload').click()" style="padding:12px">
@@ -465,7 +493,6 @@
   </div>
 </div>
 
-<!-- ── NOTIFICATIE MODAL ── -->
 <div id="notif-modal">
   <div class="notif-card">
     <div class="notif-icon">🔔</div>
@@ -481,7 +508,6 @@
   </div>
 </div>
 
-<!-- ── PERSOON INFO MODAL ── -->
 <div id="persoon-info-modal">
   <div class="notif-card" style="text-align:center;">
     <button onclick="document.getElementById('persoon-info-modal').classList.remove('open')" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
@@ -492,7 +518,6 @@
   </div>
 </div>
 
-<!-- ── PWA MODAL ── -->
 <div id="pwa-modal">
   <div class="notif-card">
     <button onclick="document.getElementById('pwa-modal').style.display='none'" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
@@ -503,7 +528,6 @@
   </div>
 </div>
 
-<!-- ── PRINT MODAL ── -->
 <div id="print-modal">
   <div class="print-card">
     <h3>🖨️ Roosters printen</h3>
@@ -669,6 +693,55 @@ function wisselPersoon(naam) {
   checkPersoonPopup(huidigePersoon);
 }
 
+// ── NIEUW: IMAGE MODAL LOGICA ──
+function openImageModal(url) {
+  document.getElementById('image-modal-img').src = url;
+  document.getElementById('image-modal').classList.add('open');
+}
+
+function sluitImageModal() {
+  document.getElementById('image-modal').classList.remove('open');
+  document.getElementById('image-modal-img').src = '';
+}
+
+// ── NIEUW: LINK CONFIRMATIE LOGICA ──
+let tijdelijkeLinkUrl = '';
+
+function bevestigLink(e, url) {
+  e.preventDefault();
+  e.stopPropagation(); // Voorkom dat andere klik events in het artikel activeren
+  tijdelijkeLinkUrl = url;
+  document.getElementById('link-modal-url').textContent = url;
+  document.getElementById('link-modal').style.display = 'flex';
+  document.getElementById('btn-link-doorgaan').onclick = function() {
+    window.open(tijdelijkeLinkUrl, '_blank');
+    sluitLinkModal();
+  };
+}
+
+function sluitLinkModal() {
+  document.getElementById('link-modal').style.display = 'none';
+  tijdelijkeLinkUrl = '';
+}
+
+// ── NIEUW: CONTENT PARSE LOGICA (LINKS & IFRAMES) ──
+function parseContent(text) {
+  if (!text) return '';
+  // Split de text op basis van HTML tags (bijv. <iframe> of <b>)
+  // Hierdoor vervangen we geen URL's die ín de code van een iframe (zoals src="...") staan
+  const parts = text.split(/(<[^>]+>)/g);
+  for (let i = 0; i < parts.length; i++) {
+    // Als dit geen HTML tag is, maken we van linkjes klikbare spans
+    if (!parts[i].startsWith('<')) {
+      parts[i] = parts[i].replace(/(https?:\/\/[^\s<]+)/g, function(match, url) {
+        return `<span class="custom-link" onclick="bevestigLink(event, '${url}')">${url}</span>`;
+      });
+    }
+  }
+  return parts.join('');
+}
+
+
 // ── INFO SCREEN ──
 function openInfoScreen() {
   toonScherm('info-screen');
@@ -708,7 +781,8 @@ function renderArtikelen() {
 
   container.innerHTML = zichtbaar.map(a => {
     const datum = new Date(a.created_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
-    const afb = a.afbeelding_url ? `<img class="artikel-afbeelding" src="${a.afbeelding_url}" alt="${a.titel}" loading="lazy">` : '';
+    // Afbeelding krijgt nu het onclick attribuut voor de pop-up
+    const afb = a.afbeelding_url ? `<img class="artikel-afbeelding" src="${a.afbeelding_url}" alt="${a.titel}" loading="lazy" onclick="openImageModal('${a.afbeelding_url}')">` : '';
     const conceptBadge = (!a.gepubliceerd && isAdmin) ? `<span class="artikel-concept-badge">📝 Concept</span>` : '';
     const adminBtns = isAdmin ? `
       <div class="artikel-admin-btns">
@@ -722,8 +796,8 @@ function renderArtikelen() {
     return `<div class="artikel-card">
       ${afb}
       <div class="artikel-body">
-        <div class="artikel-titel">${a.titel}</div>
-        <div class="artikel-tekst">${a.tekst}</div>
+        <div class="artikel-titel">${parseContent(a.titel)}</div>
+        <div class="artikel-tekst">${parseContent(a.tekst)}</div>
         <div class="artikel-meta">
           <span class="artikel-datum">📅 ${datum}</span>
           <div style="display:flex;align-items:center;gap:8px">${conceptBadge}${adminBtns}</div>
@@ -779,7 +853,6 @@ function voorbeeldAfbeelding(input) {
     document.getElementById('a-afb-preview').style.display = 'block';
   };
   reader.readAsDataURL(file);
-  // Wis de URL veld als er een file gekozen is
   document.getElementById('a-afb-url').value = '';
 }
 
@@ -799,7 +872,6 @@ async function slaArtikelOp() {
   try {
     let afbeelding_url = urlVeld || uploadedAfbeeldingUrl || null;
 
-    // Als er een nieuw bestand gekozen is, upload dit eerst
     if (uploadFile) {
       afbeelding_url = await uploadNaarSupabase(uploadFile, 'a-progress-bar', 'a-upload-progress');
     }
