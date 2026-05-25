@@ -41,8 +41,6 @@
   .login-card .subtitle { color: var(--text2); font-size: 13px; margin-bottom: 28px; }
   .login-card input[type=password] { width: 100%; background: var(--bg3); border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 14px 16px; font-size: 16px; outline: none; margin-bottom: 12px; transition: border-color .2s; display: block; }
   .login-card input[type=password]:focus { border-color: var(--accent2); }
-
-  /* ── CHECKBOX FIX ── */
   .onthoud-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 13px; color: var(--text2); cursor: pointer; text-align: left; padding: 2px 0; }
   .onthoud-label input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; margin: 0; }
   .btn-primary { width: 100%; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; }
@@ -76,6 +74,7 @@
   .btn-sm:hover { border-color: var(--accent2); color: var(--accent); }
   .btn-sm.active-filter { background: var(--gold-light); border-color: var(--gold); color: var(--gold); }
   .btn-sm.admin-btn { color: #b07800; border-color: #f0c84080; background: #fffbe8; }
+  .btn-sm.info-btn { color: var(--accent); border-color: var(--accent-light); background: var(--accent-light); }
 
   /* Poll indicator */
   .poll-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; animation: blink 2.4s infinite; flex-shrink: 0; }
@@ -99,13 +98,10 @@
   .activiteit-card { background: var(--bg2); border-radius: var(--radius); margin-bottom: 10px; border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); display: flex; transition: box-shadow .15s; position: relative; }
   .activiteit-card:hover { box-shadow: var(--shadow-md); }
   .activiteit-card.voor-mij { border-color: var(--accent2); }
-
-  /* ── HUIDIGE ACTIVITEIT ── */
   .activiteit-card.huidig { border-color: var(--green) !important; box-shadow: 0 0 0 3px rgba(22,163,74,0.20), var(--shadow-md); animation: groene-gloed 2.5s ease-in-out infinite; }
   @keyframes groene-gloed { 0%, 100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.18), 0 4px 20px rgba(0,0,0,0.12); } 50% { box-shadow: 0 0 0 5px rgba(22,163,74,0.35), 0 4px 20px rgba(0,0,0,0.12); } }
   .huidig-badge { position: absolute; top: 8px; right: 10px; background: var(--green); color: white; font-size: 10px; font-weight: 700; border-radius: 20px; padding: 2px 9px; letter-spacing: 0.3px; animation: badge-pulse 2.5s ease-in-out infinite; }
   @keyframes badge-pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
-
   .activiteit-zijbalk { width: 6px; flex-shrink: 0; }
   .c-blauw  .activiteit-zijbalk { background: #4a90d9; }
   .c-groen  .activiteit-zijbalk { background: #27ae60; }
@@ -114,7 +110,6 @@
   .c-koraal .activiteit-zijbalk { background: #e74c3c; }
   .c-grijs  .activiteit-zijbalk { background: #95a5a6; }
   .huidig .activiteit-zijbalk   { background: var(--green) !important; }
-
   .activiteit-body { padding: 12px 16px; flex: 1; display: flex; gap: 14px; align-items: center; }
   .activiteit-tijd { min-width: 76px; }
   .activiteit-tijd-start { font-size: 15px; font-weight: 700; }
@@ -126,6 +121,39 @@
   .badge-mij      { background: var(--accent-light); color: var(--accent); border: 1px solid #c5b8f5; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: normal; text-align: right; max-width: 180px; align-self: center; }
   .badge-iedereen { background: #e8f8ee; color: #27ae60; border: 1px solid #b8e8c8; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; align-self: center; }
   .badge-alle     { background: var(--gold-light); color: var(--gold); border: 1px solid #f4c870; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: normal; text-align: right; max-width: 200px; align-self: center; }
+
+  /* ── INFO SCREEN ── */
+  #info-screen { flex-direction: column; }
+  .info-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .info-header h2 { font-size: 17px; font-weight: 800; color: var(--accent); flex: 1; }
+  .btn-terug { background: var(--bg3); border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text2); padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .btn-terug:hover { border-color: var(--accent2); color: var(--accent); }
+  .info-container { padding: 20px; flex: 1; max-width: 720px; margin: 0 auto; width: 100%; }
+  .artikel-card { background: var(--bg2); border-radius: var(--radius); border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .artikel-afbeelding { width: 100%; max-height: 280px; object-fit: cover; display: block; }
+  .artikel-body { padding: 18px 20px; }
+  .artikel-titel { font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .artikel-tekst { font-size: 14px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; }
+  .artikel-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .artikel-datum { font-size: 11px; color: var(--text3); }
+  .artikel-admin-btns { display: flex; gap: 8px; }
+  .artikel-concept-badge { background: var(--gold-light); color: var(--gold); border: 1px solid var(--gold2); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+  .btn-nieuw-artikel { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(92,59,204,0.25); }
+  .btn-nieuw-artikel:hover { background: var(--gold); }
+  .lege-info { text-align: center; padding: 60px 20px; color: var(--text3); }
+  .lege-info span { font-size: 48px; display: block; margin-bottom: 14px; }
+
+  /* ── ARTIKEL EDITOR MODAL ── */
+  #artikel-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 500; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+  #artikel-modal.open { display: flex; }
+  .artikel-editor { background: var(--bg2); border-radius: 20px; padding: 28px 28px 24px; max-width: 580px; width: 100%; box-shadow: var(--shadow-md); border: 1px solid var(--border); margin: auto; }
+  .artikel-editor h3 { font-size: 18px; font-weight: 800; margin-bottom: 18px; color: var(--accent); }
+  .upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius-sm); padding: 18px; text-align: center; background: var(--bg3); cursor: pointer; transition: border-color .2s; margin-bottom: 4px; }
+  .upload-zone:hover { border-color: var(--accent2); }
+  .upload-zone p { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+  .upload-zone input[type=file] { display: none; }
+  .upload-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: var(--radius-sm); display: none; margin-top: 10px; }
+  .of-label { text-align: center; font-size: 12px; color: var(--text3); margin: 8px 0; font-weight: 600; letter-spacing: 0.5px; }
 
   /* ── MODALS ── */
   #notif-modal, #pwa-modal, #print-modal, #custom-notif-modal, #persoon-info-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
@@ -180,6 +208,12 @@
   .loader { text-align: center; padding: 40px; color: var(--text3); font-size: 14px; }
   #print-area { display: none; }
 
+  /* Upload progress */
+  .upload-progress { display: none; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); margin-top: 8px; }
+  .upload-progress.zichtbaar { display: flex; }
+  .progress-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 10px; transition: width .3s; width: 0%; }
+
   @media print {
     body > * { display: none !important; }
     body > #print-area { display: block !important; position: relative !important; width: 100%; }
@@ -192,11 +226,13 @@
     .app-header { flex-wrap: wrap; gap: 8px; }
     .rooster-container { padding: 14px; }
     .activiteit-body { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .info-container { padding: 14px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ── LOGIN ── -->
 <div id="login-screen" class="screen active">
   <div class="login-card">
     <img class="login-logo" src="https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/logo" alt="Logo"
@@ -213,6 +249,7 @@
   </div>
 </div>
 
+<!-- ── NAAM KIEZEN ── -->
 <div id="naam-screen" class="screen">
   <div class="naam-card">
     <h2>Wie ben jij? 👋</h2>
@@ -222,6 +259,7 @@
   </div>
 </div>
 
+<!-- ── APP SCREEN ── -->
 <div id="app-screen" class="screen">
   <div class="app-header">
     <img class="header-logo" src="https://tuualasepvtlgclxqpeu.supabase.co/storage/v1/object/public/logo/icon.png" alt="Logo">
@@ -234,22 +272,86 @@
         <label>Rooster van:</label>
         <select class="persoon-select" id="persoon-select" onchange="wisselPersoon(this.value)"></select>
       </div>
+      <button class="btn-sm info-btn" onclick="openInfoScreen()">📰 Info</button>
       <button class="btn-sm" id="filter-btn" onclick="toggleFilter()">👁️ Toon alles</button>
       <button class="btn-sm" onclick="openPrintModal()">🖨️ Printen</button>
       <button class="btn-sm admin-btn" id="admin-btn" onclick="toggleAdmin()" style="display:none">⚙️ Admin</button>
     </div>
   </div>
   <div class="papel-picado"></div>
-
   <div class="rooster-container">
     <div class="dag-tabs" id="dag-tabs-container"></div>
-    <div id="roosters-container">
-      <div class="loader">Rooster laden…</div>
-    </div>
+    <div id="roosters-container"><div class="loader">Rooster laden…</div></div>
     <div id="persoon-variabele-container"></div>
   </div>
 </div>
 
+<!-- ── INFO SCREEN ── -->
+<div id="info-screen" class="screen">
+  <div class="info-header">
+    <button class="btn-terug" onclick="sluitInfoScreen()">← Terug</button>
+    <h2>📰 Informatie & Updates</h2>
+    <span id="info-artikel-count" style="font-size:12px;color:var(--text3);"></span>
+  </div>
+  <div class="papel-picado"></div>
+  <div class="info-container">
+    <button class="btn-nieuw-artikel" id="btn-nieuw-artikel" onclick="openArtikelModal()" style="display:none">
+      ✏️ Nieuw artikel schrijven
+    </button>
+    <div id="artikelen-container"><div class="loader">Artikelen laden…</div></div>
+  </div>
+</div>
+
+<!-- ── ARTIKEL EDITOR MODAL ── -->
+<div id="artikel-modal">
+  <div class="artikel-editor">
+    <h3 id="artikel-modal-titel">✏️ Nieuw Artikel</h3>
+
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Titel *</label>
+      <input type="text" id="a-titel" placeholder="Bijv. Programma update!">
+    </div>
+
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Tekst *</label>
+      <textarea id="a-tekst" rows="6" placeholder="Schrijf hier de inhoud van je artikel..." style="resize:vertical;width:100%;padding:10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:inherit;font-size:13px;outline:none;"></textarea>
+    </div>
+
+    <div class="form-group" style="margin-bottom:4px">
+      <label>Afbeelding uploaden</label>
+      <div class="upload-zone" onclick="document.getElementById('a-afb-upload').click()">
+        <p>📁 Klik om een foto te kiezen</p>
+        <p style="font-size:11px;color:var(--text3)">JPG, PNG, WEBP — max 5MB</p>
+        <input type="file" id="a-afb-upload" accept="image/*" onchange="voorbeeldAfbeelding(this)">
+        <img id="a-afb-preview" class="upload-preview" alt="Preview">
+      </div>
+      <div class="upload-progress" id="a-upload-progress">
+        <span>Uploaden…</span>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="a-progress-bar"></div></div>
+      </div>
+    </div>
+
+    <div class="of-label">— of gebruik een URL —</div>
+
+    <div class="form-group" style="margin-bottom:16px">
+      <input type="url" id="a-afb-url" placeholder="https://site.com/foto.jpg" style="width:100%;padding:9px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none;">
+    </div>
+
+    <div class="form-group" style="margin-bottom:18px">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text2);">
+        <input type="checkbox" id="a-gepubliceerd" style="accent-color:var(--accent);width:16px;height:16px;">
+        Direct publiceren (anders opgeslagen als concept)
+      </label>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="sluitArtikelModal()" style="flex:1;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);padding:12px;font-size:14px;font-weight:600;cursor:pointer;">Annuleren</button>
+      <button id="btn-sla-artikel" onclick="slaArtikelOp()" style="flex:2;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);padding:12px;font-size:14px;font-weight:700;cursor:pointer;">💾 Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
 <div id="admin-panel">
   <div class="admin-header">
     <h3>⚙️ Admin – Rooster beheren</h3>
@@ -273,8 +375,8 @@
       <div class="personen-checkboxes" id="personen-checkboxes"></div>
     </div>
     <button class="btn-save" id="save-btn" onclick="slaBlokOp()">💾 Opslaan</button>
-    
-    <div class="admin-section-title" style="margin-top: 20px;">Dagbericht Instellen</div>
+
+    <div class="admin-section-title" style="margin-top:20px">Dagbericht Instellen</div>
     <div class="form-group">
       <label>Kies Dag</label>
       <select id="admin-dag-select" onchange="laadSpecifiekDagBericht()">
@@ -287,7 +389,7 @@
     </div>
     <button class="btn-save" onclick="slaDagBerichtOp()">💾 Dagbericht Opslaan</button>
 
-    <div class="admin-section-title" style="margin-top: 20px;">Persoonlijke Rol / Info Instellen</div>
+    <div class="admin-section-title" style="margin-top:20px">Persoonlijke Rol / Info Instellen</div>
     <div class="form-group">
       <label>Kies Persoon</label>
       <select id="admin-persoon-select" onchange="laadSpecifiekPersoonVariabele()">
@@ -300,60 +402,70 @@
     </div>
     <button class="btn-save" onclick="slaPersoonVariabeleOp()">💾 Rol Opslaan</button>
 
-    <div class="admin-section-title" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: none; padding-bottom: 0;">
-      <button onclick="openCustomNotifModal()" style="background: var(--accent); color: white; border: none; padding: 16px 24px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(92, 59, 204, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
-        <span style="font-size: 18px;">📢</span> Handmatig Notificatie Sturen
+    <div class="admin-section-title" style="margin-top:20px;display:flex;flex-direction:column;gap:12px;border-bottom:none;padding-bottom:0;">
+      <button onclick="openCustomNotifModal()" style="background:var(--accent);color:white;border:none;padding:16px 24px;border-radius:var(--radius-sm);cursor:pointer;font-weight:700;font-size:15px;width:100%;box-shadow:0 4px 12px rgba(92,59,204,0.25);display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span style="font-size:18px;">📢</span> Handmatig Notificatie Sturen
       </button>
-      <div style="font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; width: 100%; margin-top: 10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;width:100%;margin-top:10px;">
         Bestaande blokken
       </div>
     </div>
-
     <div id="admin-blok-list"><div class="loader">Laden…</div></div>
   </div>
 </div>
 
-<div id="custom-notif-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px;">
-  <div class="notif-card" style="text-align: left;">
-    <button onclick="sluitCustomNotifModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: var(--text2); cursor: pointer;">&times;</button>
-    <h3 style="margin-top: 0; color: var(--text); font-size: 19px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">📢 Pushbericht Verzenden</h3>
-    
-    <div class="form-group">
-      <label>Doelgroep</label>
-      <select id="c-notif-doelgroep" onchange="toggleCustomNotifNaam()" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; outline: none;">
+<!-- ── CUSTOM NOTIFICATIE MODAL ── -->
+<div id="custom-notif-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px;">
+  <div class="notif-card" style="text-align:left;max-width:480px;">
+    <button onclick="sluitCustomNotifModal()" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
+    <h3 style="margin-top:0;color:var(--text);font-size:19px;margin-bottom:16px;">📢 Pushbericht Verzenden</h3>
+
+    <div class="form-group" style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">Doelgroep</label>
+      <select id="c-notif-doelgroep" onchange="toggleCustomNotifNaam()" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;">
         <option value="iedereen">Iedereen (Alle actieve apparaten)</option>
         <option value="specifiek">Specifiek persoon</option>
       </select>
     </div>
-
-    <div class="form-group" id="c-notif-naam-container" style="display: none;">
-      <label>Naam Ontvanger</label>
-      <select id="c-notif-naam" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; outline: none;">
-        </select>
+    <div class="form-group" id="c-notif-naam-container" style="display:none;margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">Naam Ontvanger</label>
+      <select id="c-notif-naam" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:14px;outline:none;"></select>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">Titel *</label>
+      <input type="text" id="c-notif-titel" placeholder="Bijv. Belangrijke wijziging!" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:14px;background:var(--bg3);color:var(--text);outline:none;">
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">Bericht tekst *</label>
+      <textarea id="c-notif-body" placeholder="Typ hier de inhoud van je pushmelding..." rows="3" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);resize:vertical;font-family:inherit;font-size:14px;background:var(--bg3);color:var(--text);outline:none;"></textarea>
     </div>
 
-    <div class="form-group">
-      <label>Titel *</label>
-      <input type="text" id="c-notif-titel" placeholder="Bijv. Belangrijke wijziging!" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
+    <!-- Afbeelding: upload of URL -->
+    <div class="form-group" style="margin-bottom:4px">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">Afbeelding uploaden (optioneel)</label>
+      <div class="upload-zone" onclick="document.getElementById('c-notif-upload').click()" style="padding:12px">
+        <p style="margin:0;font-size:12px">📁 Klik om foto te kiezen</p>
+        <input type="file" id="c-notif-upload" accept="image/*" onchange="voorbeeldNotifAfbeelding(this)">
+        <img id="c-notif-preview" class="upload-preview" alt="Preview">
+      </div>
+      <div class="upload-progress" id="c-upload-progress">
+        <span>Uploaden…</span>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="c-progress-bar"></div></div>
+      </div>
+    </div>
+    <div class="of-label">— of gebruik een URL —</div>
+    <div class="form-group" style="margin-bottom:20px">
+      <input type="url" id="c-notif-afbeelding" placeholder="https://site.com/plaatje.jpg" style="width:100%;padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:14px;background:var(--bg3);color:var(--text);outline:none;">
     </div>
 
-    <div class="form-group">
-      <label>Bericht tekst *</label>
-      <textarea id="c-notif-body" placeholder="Typ hier de inhoud van je pushmelding..." rows="3" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); resize: vertical; font-family: inherit; font-size: 14px; background: var(--bg3); color: var(--text); outline: none;"></textarea>
-    </div>
-
-    <div class="form-group" style="margin-bottom: 20px;">
-      <label>Afbeelding URL (Optioneel)</label>
-      <input type="url" id="c-notif-afbeelding" placeholder="https://site.com/plaatje.jpg" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--bg3); color: var(--text); outline: none;">
-    </div>
-
-    <div style="display: flex; justify-content: flex-end; gap: 10px;">
-      <button onclick="sluitCustomNotifModal()" style="background: var(--bg3); color: var(--text2); border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Annuleren</button>
-      <button id="btn-stuur-c-notif" onclick="verstuurCustomNotificatie()" style="background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px;">Verzenden</button>
+    <div style="display:flex;gap:10px;">
+      <button onclick="sluitCustomNotifModal()" style="flex:1;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);padding:12px;font-size:14px;font-weight:600;cursor:pointer;">Annuleren</button>
+      <button id="btn-stuur-c-notif" onclick="verstuurCustomNotificatie()" style="flex:2;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);padding:12px;font-size:15px;font-weight:700;cursor:pointer;">🚀 Verzenden</button>
     </div>
   </div>
 </div>
 
+<!-- ── NOTIFICATIE MODAL ── -->
 <div id="notif-modal">
   <div class="notif-card">
     <div class="notif-icon">🔔</div>
@@ -369,26 +481,29 @@
   </div>
 </div>
 
+<!-- ── PERSOON INFO MODAL ── -->
 <div id="persoon-info-modal">
-  <div class="notif-card" style="text-align: center;">
-    <button onclick="document.getElementById('persoon-info-modal').classList.remove('open')" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: var(--text2); cursor: pointer;">&times;</button>
-    <div style="font-size: 40px; margin-bottom: 10px;">🎭</div>
-    <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 10px;">Jouw Persoonlijke Info</h3>
-    <p style="font-size: 15px; color: var(--text); font-weight: 600; margin-bottom: 20px; background: var(--bg3); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);" id="persoon-info-tekst"></p>
-    <button class="btn-notif-ja" onclick="document.getElementById('persoon-info-modal').classList.remove('open')" style="width: 100%;">Begrepen!</button>
+  <div class="notif-card" style="text-align:center;">
+    <button onclick="document.getElementById('persoon-info-modal').classList.remove('open')" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
+    <div style="font-size:40px;margin-bottom:10px;">🎭</div>
+    <h3 style="font-size:20px;font-weight:800;margin-bottom:10px;">Jouw Persoonlijke Info</h3>
+    <p style="font-size:15px;color:var(--text);font-weight:600;margin-bottom:20px;background:var(--bg3);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);" id="persoon-info-tekst"></p>
+    <button class="btn-notif-ja" onclick="document.getElementById('persoon-info-modal').classList.remove('open')" style="width:100%;">Begrepen!</button>
   </div>
 </div>
 
+<!-- ── PWA MODAL ── -->
 <div id="pwa-modal">
   <div class="notif-card">
-    <button onclick="document.getElementById('pwa-modal').style.display='none'" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 28px; color: var(--text2); cursor: pointer;">&times;</button>
+    <button onclick="document.getElementById('pwa-modal').style.display='none'" style="position:absolute;top:15px;right:20px;background:none;border:none;font-size:28px;color:var(--text2);cursor:pointer;">&times;</button>
     <div class="notif-icon">📱</div>
     <h3>App Installeren</h3>
     <p>Om notificaties te ontvangen, moet je Aristeia als app op je telefoon zetten.</p>
-    <div id="pwa-instructies" style="text-align: left; background: var(--bg3); padding: 16px; border-radius: 12px; font-size: 14px; margin-top: 16px; line-height: 1.5;"></div>
+    <div id="pwa-instructies" style="text-align:left;background:var(--bg3);padding:16px;border-radius:12px;font-size:14px;margin-top:16px;line-height:1.5;"></div>
   </div>
 </div>
 
+<!-- ── PRINT MODAL ── -->
 <div id="print-modal">
   <div class="print-card">
     <h3>🖨️ Roosters printen</h3>
@@ -415,7 +530,6 @@ const VAPID_KEY  = 'BCXl8cpATHcRLsDM51LSyGE8JGEMcEp9AAlJjXh8EUpNT_SOTZvVtryaWaU9
 const SB_URL     = 'https://tuualasepvtlgclxqpeu.supabase.co';
 const SB_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1dWFsYXNlcHZ0bGdjbHhxcGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNTYzNzMsImV4cCI6MjA5NDkzMjM3M30.ZlTKh5HKvqmDOP4W-fL7oG5ErPqnqZEs2K181x6amMY';
 const NAMEN = ['Aakash','Abel','Ayse','Daniël','Hein','Hidde','Jip','Laili','Levi','Lukas','Mannat','Mare','Marijn','Max','Mehyar','Noor','Ralph','Safia','Sami','Stine','Tamar','Thijme','Thorsten','Tobias','Wams'];
-
 const MAAND_NAMEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const DAG_NAMEN = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
 
@@ -432,17 +546,15 @@ let messaging = null;
 try { messaging = firebase.messaging(); } catch(e) { console.warn('FCM niet beschikbaar:', e.message); }
 if (messaging) {
   messaging.onMessage(p => {
-    const {title, body} = p.notification || {};
-    showToast(`🔔 ${title}: ${body}`);
+    const n = p.notification || p.data || {};
+    showToast(`🔔 ${n.title||''}: ${n.body||''}`);
   });
 }
 
-// ── SERVICE WORKER REGISTRATIE ──
+// ── SERVICE WORKER ──
 let swRegistration = null;
 if ('serviceWorker' in navigator) {
-  const swUrl   = new URL('./firebase-messaging-sw.js', location.href).href;
-  const swScope = new URL('./', location.href).href;
-  navigator.serviceWorker.register(swUrl, { scope: swScope })
+  navigator.serviceWorker.register(new URL('./firebase-messaging-sw.js', location.href).href, { scope: new URL('./', location.href).href })
     .then(reg => { swRegistration = reg; })
     .catch(e => console.warn('SW registratie mislukt:', e));
 }
@@ -451,15 +563,17 @@ if ('serviceWorker' in navigator) {
 let huidigePersoon = '';
 let isAdmin = false;
 let alleBlokken = [];
-let uniekeDagen = []; 
-let actieveDagSleutel = ''; 
+let uniekeDagen = [];
+let actieveDagSleutel = '';
 let editId = null;
 let toonAlles = false;
 let pollInterval = null;
-
-// VOOR BERICHTEN & ROLLEN
 let dagBerichten = [];
 let persoonVariabelen = [];
+let alleArtikelen = [];
+let artikelEditId = null;
+let uploadedAfbeeldingUrl = ''; // voor artikel editor
+let uploadedNotifAfbeeldingUrl = ''; // voor notif modal
 
 // ── SUPABASE ──
 async function sbFetch(path, method='GET', body=null) {
@@ -468,6 +582,30 @@ async function sbFetch(path, method='GET', body=null) {
   const r = await fetch(SB_URL+'/rest/v1'+path, opts);
   if (!r.ok) throw new Error(await r.text());
   return r.status === 204 ? null : r.json();
+}
+
+// ── SUPABASE STORAGE UPLOAD ──
+async function uploadNaarSupabase(file, progressBarId, progressWrapId) {
+  const ext = file.name.split('.').pop();
+  const bestandsnaam = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const uploadUrl = `${SB_URL}/storage/v1/object/afbeeldingen/${bestandsnaam}`;
+
+  const progressWrap = document.getElementById(progressWrapId);
+  const progressBar = document.getElementById(progressBarId);
+  if (progressWrap) progressWrap.classList.add('zichtbaar');
+  if (progressBar) progressBar.style.width = '20%';
+
+  const r = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': file.type, 'x-upsert': 'true' },
+    body: file
+  });
+
+  if (progressBar) progressBar.style.width = '100%';
+  setTimeout(() => { if (progressWrap) progressWrap.classList.remove('zichtbaar'); }, 800);
+
+  if (!r.ok) throw new Error('Upload mislukt: ' + await r.text());
+  return `${SB_URL}/storage/v1/object/public/afbeeldingen/${bestandsnaam}`;
 }
 
 // ── AUTO LOGIN ──
@@ -487,9 +625,7 @@ function checkWachtwoord() {
   const val = document.getElementById('wachtwoord-input').value.trim();
   if (val === WACHTWOORD || val === ADMIN_WW) {
     isAdmin = val === ADMIN_WW;
-    if (document.getElementById('onthoud-cb').checked) {
-      localStorage.setItem('aristeia_ww', val);
-    }
+    if (document.getElementById('onthoud-cb').checked) localStorage.setItem('aristeia_ww', val);
     toonScherm('naam-screen');
     vulNaamGrid();
   } else {
@@ -502,6 +638,7 @@ function toonScherm(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+
 function vulNaamGrid() {
   document.getElementById('naam-grid').innerHTML = NAMEN.map(n =>
     `<button class="naam-btn" onclick="kiesNaam('${n}')">${n}</button>`).join('');
@@ -522,26 +659,194 @@ function startApp() {
   laadRooster();
   if (pollInterval) clearInterval(pollInterval);
   pollInterval = setInterval(laadRooster, 30000);
-  
-  setTimeout(() => {
-    controleerNotificaties();
-    verversTokenAchtergrond();
-  }, 1200);
+  setTimeout(() => { controleerNotificaties(); verversTokenAchtergrond(); }, 1200);
 }
 
 function wisselPersoon(naam) {
   huidigePersoon = naam;
   renderRooster();
-  toonHuidigePersoonVariabele(); // Laad variabele van de persoon die je bekijkt
-  checkPersoonPopup(huidigePersoon); // Check voor popup (wordt alleen getoond als het je EIGEN naam is)
+  toonHuidigePersoonVariabele();
+  checkPersoonPopup(huidigePersoon);
+}
+
+// ── INFO SCREEN ──
+function openInfoScreen() {
+  toonScherm('info-screen');
+  if (isAdmin) document.getElementById('btn-nieuw-artikel').style.display = 'flex';
+  laadArtikelen();
+}
+
+function sluitInfoScreen() {
+  toonScherm('app-screen');
+}
+
+async function laadArtikelen() {
+  document.getElementById('artikelen-container').innerHTML = '<div class="loader">Artikelen laden…</div>';
+  try {
+    const query = isAdmin
+      ? '/info_artikelen?select=*&order=created_at.desc'
+      : '/info_artikelen?select=*&gepubliceerd=eq.true&order=created_at.desc';
+    alleArtikelen = await sbFetch(query);
+    renderArtikelen();
+  } catch(e) {
+    document.getElementById('artikelen-container').innerHTML = `<div class="lege-info"><span>⚠️</span>Kon artikelen niet laden.</div>`;
+    console.error(e);
+  }
+}
+
+function renderArtikelen() {
+  const container = document.getElementById('artikelen-container');
+  const zichtbaar = isAdmin ? alleArtikelen : alleArtikelen.filter(a => a.gepubliceerd);
+
+  const count = document.getElementById('info-artikel-count');
+  if (count) count.textContent = `${zichtbaar.length} artikel${zichtbaar.length !== 1 ? 'en' : ''}`;
+
+  if (!zichtbaar.length) {
+    container.innerHTML = `<div class="lege-info"><span>📰</span>${isAdmin ? 'Nog geen artikelen. Schrijf het eerste!' : 'Er zijn nog geen berichten geplaatst.'}</div>`;
+    return;
+  }
+
+  container.innerHTML = zichtbaar.map(a => {
+    const datum = new Date(a.created_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+    const afb = a.afbeelding_url ? `<img class="artikel-afbeelding" src="${a.afbeelding_url}" alt="${a.titel}" loading="lazy">` : '';
+    const conceptBadge = (!a.gepubliceerd && isAdmin) ? `<span class="artikel-concept-badge">📝 Concept</span>` : '';
+    const adminBtns = isAdmin ? `
+      <div class="artikel-admin-btns">
+        <button class="btn-xs" onclick="editArtikel('${a.id}')" style="color:var(--accent)">✏️ Bewerken</button>
+        <button class="btn-xs" onclick="togglePubliceer('${a.id}', ${a.gepubliceerd})" style="color:${a.gepubliceerd?'#e74c3c':'var(--green)'}">
+          ${a.gepubliceerd ? '👁️ Verbergen' : '✅ Publiceren'}
+        </button>
+        <button class="btn-xs" onclick="verwijderArtikel('${a.id}')" style="color:#e74c3c">🗑️</button>
+      </div>` : '';
+
+    return `<div class="artikel-card">
+      ${afb}
+      <div class="artikel-body">
+        <div class="artikel-titel">${a.titel}</div>
+        <div class="artikel-tekst">${a.tekst}</div>
+        <div class="artikel-meta">
+          <span class="artikel-datum">📅 ${datum}</span>
+          <div style="display:flex;align-items:center;gap:8px">${conceptBadge}${adminBtns}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── ARTIKEL EDITOR ──
+function openArtikelModal(id = null) {
+  artikelEditId = id;
+  uploadedAfbeeldingUrl = '';
+  document.getElementById('a-titel').value = '';
+  document.getElementById('a-tekst').value = '';
+  document.getElementById('a-afb-url').value = '';
+  document.getElementById('a-gepubliceerd').checked = true;
+  document.getElementById('a-afb-preview').style.display = 'none';
+  document.getElementById('a-afb-preview').src = '';
+  document.getElementById('a-afb-upload').value = '';
+
+  if (id) {
+    const a = alleArtikelen.find(x => x.id === id);
+    if (a) {
+      document.getElementById('artikel-modal-titel').textContent = '✏️ Artikel Bewerken';
+      document.getElementById('a-titel').value = a.titel;
+      document.getElementById('a-tekst').value = a.tekst;
+      document.getElementById('a-afb-url').value = a.afbeelding_url || '';
+      document.getElementById('a-gepubliceerd').checked = a.gepubliceerd;
+      if (a.afbeelding_url) {
+        document.getElementById('a-afb-preview').src = a.afbeelding_url;
+        document.getElementById('a-afb-preview').style.display = 'block';
+        uploadedAfbeeldingUrl = a.afbeelding_url;
+      }
+    }
+  } else {
+    document.getElementById('artikel-modal-titel').textContent = '✏️ Nieuw Artikel';
+  }
+  document.getElementById('artikel-modal').classList.add('open');
+}
+
+function sluitArtikelModal() {
+  document.getElementById('artikel-modal').classList.remove('open');
+  artikelEditId = null;
+}
+
+function voorbeeldAfbeelding(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('a-afb-preview').src = e.target.result;
+    document.getElementById('a-afb-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  // Wis de URL veld als er een file gekozen is
+  document.getElementById('a-afb-url').value = '';
+}
+
+async function slaArtikelOp() {
+  const titel = document.getElementById('a-titel').value.trim();
+  const tekst = document.getElementById('a-tekst').value.trim();
+  const urlVeld = document.getElementById('a-afb-url').value.trim();
+  const gepubliceerd = document.getElementById('a-gepubliceerd').checked;
+  const uploadFile = document.getElementById('a-afb-upload').files[0];
+
+  if (!titel || !tekst) { showToast('Titel en tekst zijn verplicht!', true); return; }
+
+  const btn = document.getElementById('btn-sla-artikel');
+  btn.disabled = true;
+  btn.textContent = 'Opslaan…';
+
+  try {
+    let afbeelding_url = urlVeld || uploadedAfbeeldingUrl || null;
+
+    // Als er een nieuw bestand gekozen is, upload dit eerst
+    if (uploadFile) {
+      afbeelding_url = await uploadNaarSupabase(uploadFile, 'a-progress-bar', 'a-upload-progress');
+    }
+
+    const data = { titel, tekst, afbeelding_url, gepubliceerd };
+
+    if (artikelEditId) {
+      await sbFetch(`/info_artikelen?id=eq.${artikelEditId}`, 'PATCH', data);
+    } else {
+      await sbFetch('/info_artikelen', 'POST', data);
+    }
+
+    showToast(gepubliceerd ? '✅ Artikel gepubliceerd!' : '📝 Opgeslagen als concept');
+    sluitArtikelModal();
+    await laadArtikelen();
+  } catch(e) {
+    showToast('Fout: ' + e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Opslaan';
+  }
+}
+
+function editArtikel(id) {
+  openArtikelModal(id);
+}
+
+async function togglePubliceer(id, huidigStatus) {
+  try {
+    await sbFetch(`/info_artikelen?id=eq.${id}`, 'PATCH', { gepubliceerd: !huidigStatus });
+    showToast(!huidigStatus ? '✅ Artikel gepubliceerd!' : '👁️ Artikel verborgen');
+    await laadArtikelen();
+  } catch(e) { showToast('Fout: ' + e.message, true); }
+}
+
+async function verwijderArtikel(id) {
+  if (!confirm('Weet je zeker dat je dit artikel wil verwijderen?')) return;
+  try {
+    await sbFetch(`/info_artikelen?id=eq.${id}`, 'DELETE');
+    showToast('Artikel verwijderd');
+    await laadArtikelen();
+  } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
 // ── NOTIFICATIES & PWA ──
 function controleerNotificaties() {
-  if (!('Notification' in window)) {
-    toonPwaInstructies();
-    return;
-  }
+  if (!('Notification' in window)) { toonPwaInstructies(); return; }
   const heeftToken = localStorage.getItem('aristeia_notif_ok') === huidigePersoon;
   if (Notification.permission !== 'granted' || !heeftToken) {
     document.getElementById('notif-naam-display').textContent  = huidigePersoon;
@@ -552,13 +857,9 @@ function controleerNotificaties() {
 
 function toonPwaInstructies() {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const instructiesDiv = document.getElementById('pwa-instructies');
-  
-  if (isIOS) {
-    instructiesDiv.innerHTML = `<strong>Voor iPhone / iPad:</strong><br><br>1. Tik op het deel-icoontje <span style="font-size:18px">⍗</span> onderin je scherm.<br>2. Kies <strong>'Zet op beginscherm'</strong> of <strong>'Add to Home Screen'</strong>.<br>3. Open Aristeia daarna vanaf je beginscherm om notificaties aan te zetten!`;
-  } else {
-    instructiesDiv.innerHTML = `<strong>Voor Android:</strong><br><br>1. Tik op de drie puntjes <span style="font-size:18px">⋮</span> rechtsboven in je browser.<br>2. Kies <strong>'App installeren'</strong> of <strong>'Toevoegen aan startscherm'</strong>.<br>3. Open de app vanaf je beginscherm.`;
-  }
+  document.getElementById('pwa-instructies').innerHTML = isIOS
+    ? `<strong>Voor iPhone / iPad:</strong><br><br>1. Tik op het deel-icoontje ⍗ onderin je scherm.<br>2. Kies <strong>'Zet op beginscherm'</strong>.<br>3. Open Aristeia daarna vanaf je beginscherm!`
+    : `<strong>Voor Android:</strong><br><br>1. Tik op de drie puntjes ⋮ rechtsboven.<br>2. Kies <strong>'App installeren'</strong>.<br>3. Open de app vanaf je beginscherm.`;
   document.getElementById('notif-modal').classList.remove('open');
   document.getElementById('pwa-modal').style.display = 'flex';
 }
@@ -569,41 +870,29 @@ async function vraagNotificaties() {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') { showToast('Meldingen niet toegestaan', true); return; }
     if (!messaging) { showToast('FCM niet beschikbaar in deze browser', true); return; }
-
     const tokenOpts = { vapidKey: VAPID_KEY };
     if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
-
     const token = await messaging.getToken(tokenOpts);
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(token), 'DELETE').catch(() => {});
     await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token });
-
     localStorage.setItem('aristeia_notif_ok', huidigePersoon);
     showToast('✓ Meldingen ingeschakeld voor ' + huidigePersoon + '!');
-  } catch(e) {
-    console.error('FCM token error:', e);
-    showToast('Kon meldingen niet instellen: ' + e.message, true);
-  }
+  } catch(e) { showToast('Kon meldingen niet instellen: ' + e.message, true); }
 }
 
-function slaNotificatiesOver() {
-  document.getElementById('notif-modal').classList.remove('open');
-}
+function slaNotificatiesOver() { document.getElementById('notif-modal').classList.remove('open'); }
 
 async function verversTokenAchtergrond() {
   if (!messaging || !('Notification' in window) || Notification.permission !== 'granted') return;
   try {
     const tokenOpts = { vapidKey: VAPID_KEY };
     if (swRegistration) tokenOpts.serviceWorkerRegistration = swRegistration;
-    
     const huidigToken = await messaging.getToken(tokenOpts);
     if (!huidigToken) return;
-
     await sbFetch('/fcm_tokens?token=eq.' + encodeURIComponent(huidigToken), 'DELETE').catch(() => {});
     await sbFetch('/fcm_tokens', 'POST', { naam: huidigePersoon, token: huidigToken });
     localStorage.setItem('aristeia_notif_ok', huidigePersoon);
-  } catch (e) {
-    console.warn('Achtergrond token refresh mislukt:', e);
-  }
+  } catch(e) { console.warn('Token refresh mislukt:', e); }
 }
 
 // ── EMOJI ──
@@ -616,7 +905,6 @@ function getEmoji(titel) {
   if (t.includes('hockey')) return '🏑';
   if (t.includes('frisbee')) return '🥏';
   if (t.includes('tafeltennis')) return '🏓';
-  if (t.includes('tafelvoetbal')) return '⚽';
   if (t.includes('sport')) return '🏃';
   if (t.includes('escape')) return '🔐';
   if (t.includes('quiz')||t.includes('kennis')) return '🧠';
@@ -630,14 +918,12 @@ function getEmoji(titel) {
   return '🌼';
 }
 
-// ── HUIDIGE ACTIVITEIT (DYNAMISCH) ──
 function isHuidig(tijdStart, tijdEind, dag, datum) {
   const now = new Date();
   const ams = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }));
   if (DAG_NAMEN[ams.getDay()] !== dag) return false;
   const huidigeDatumStr = `${ams.getDate()} ${MAAND_NAMEN[ams.getMonth()]}`;
   if (datum !== huidigeDatumStr) return false;
-  
   const nowMins = ams.getHours()*60 + ams.getMinutes();
   const [sh,sm] = tijdStart.split(':').map(Number);
   const [eh,em] = tijdEind.split(':').map(Number);
@@ -664,54 +950,30 @@ function bepaalUniekeDagen() {
   uniekeDagen.sort((a, b) => geefDatumSorteerWaarde(a.datum) - geefDatumSorteerWaarde(b.datum));
 }
 
-// ── PERSOONLIJKE ROL POPUP ──
 function checkPersoonPopup(geselecteerdeNaam) {
   if (!geselecteerdeNaam || persoonVariabelen.length === 0) return;
-  
   const loggedInNaam = localStorage.getItem('aristeia_naam');
-  if (!loggedInNaam) return;
-
-  // We tonen de popup ALLEEN als de persoon naar zijn eigen rooster kijkt of net inlogt.
-  if (geselecteerdeNaam.toLowerCase() !== loggedInNaam.toLowerCase()) return;
-
+  if (!loggedInNaam || geselecteerdeNaam.toLowerCase() !== loggedInNaam.toLowerCase()) return;
   const info = persoonVariabelen.find(p => p.naam.toLowerCase() === loggedInNaam.toLowerCase());
-  
-  if (info && info.variabele) {
-    // Alleen tonen als het nog niet in deze sessie is weggeklikt
-    if (!sessionStorage.getItem('rol_gezien_' + loggedInNaam)) {
-      document.getElementById('persoon-info-tekst').innerHTML = info.variabele;
-      document.getElementById('persoon-info-modal').classList.add('open');
-      sessionStorage.setItem('rol_gezien_' + loggedInNaam, 'true');
-    }
+  if (info && info.variabele && !sessionStorage.getItem('rol_gezien_' + loggedInNaam)) {
+    document.getElementById('persoon-info-tekst').innerHTML = info.variabele;
+    document.getElementById('persoon-info-modal').classList.add('open');
+    sessionStorage.setItem('rol_gezien_' + loggedInNaam, 'true');
   }
 }
 
-// ── DATA ──
 async function laadRooster() {
   try {
     alleBlokken = await sbFetch('/rooster_blokken?select=*,rooster_personen(naam)&order=tijd_start');
-    
-    // Haal extra data op (maar laat het rooster niet crashen als de tabel leeg is)
+    try { dagBerichten = await sbFetch('/dag_berichten?select=*') || []; } catch(e) {}
     try {
-      const dbRes = await sbFetch('/dag_berichten?select=*');
-      dagBerichten = dbRes || [];
-    } catch(e) { console.warn("Kon dag_berichten niet ophalen"); }
-    
-    try {
-      const pvRes = await sbFetch('/persoon_variabelen?select=*');
-      persoonVariabelen = pvRes || [];
-      // Controleer direct na het laden voor de ingelogde persoon
+      persoonVariabelen = await sbFetch('/persoon_variabelen?select=*') || [];
       checkPersoonPopup(huidigePersoon);
-    } catch(e) { console.warn("Kon persoon_variabelen niet ophalen"); }
-
+    } catch(e) {}
     bepaalUniekeDagen();
     renderRooster();
     toonHuidigePersoonVariabele();
-
-    if (isAdmin) {
-      renderAdminLijst();
-      vulAdminExtraSelects();
-    }
+    if (isAdmin) { renderAdminLijst(); vulAdminExtraSelects(); }
   } catch(e) { console.error('Rooster laden mislukt:', e); }
 }
 
@@ -721,31 +983,23 @@ function renderRooster() {
     document.getElementById('roosters-container').innerHTML = `<div class="lege-dag"><span>😴</span>Er zijn nog geen activiteiten in het rooster gezet.</div>`;
     return;
   }
-
   const nu = new Date();
   const ams = new Date(nu.toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }));
   const vandaagSleutel = `${DAG_NAMEN[ams.getDay()]}|${ams.getDate()} ${MAAND_NAMEN[ams.getMonth()]}`;
-
   if (!actieveDagSleutel || !uniekeDagen.some(ud => `${ud.dag}|${ud.datum}` === actieveDagSleutel)) {
     const heeftVandaag = uniekeDagen.some(ud => `${ud.dag}|${ud.datum}` === vandaagSleutel);
     actieveDagSleutel = heeftVandaag ? vandaagSleutel : `${uniekeDagen[0].dag}|${uniekeDagen[0].datum}`;
   }
-
   document.getElementById('dag-tabs-container').innerHTML = uniekeDagen.map(ud => {
     const sleutel = `${ud.dag}|${ud.datum}`;
-    const isActief = sleutel === actieveDagSleutel;
-    return `<button class="dag-tab ${isActief ? 'active' : ''}" onclick="switchDag('${sleutel}')">📅 ${ud.dag} ${ud.datum}</button>`;
+    return `<button class="dag-tab ${sleutel === actieveDagSleutel ? 'active' : ''}" onclick="switchDag('${sleutel}')">📅 ${ud.dag} ${ud.datum}</button>`;
   }).join('');
-
   document.getElementById('roosters-container').innerHTML = uniekeDagen.map(ud => {
     const sleutel = `${ud.dag}|${ud.datum}`;
-    const isActief = sleutel === actieveDagSleutel;
     const sfeeremoji = ud.dag === 'Donderdag' ? '💀' : (ud.dag === 'Vrijdag' ? '🌼' : '🎭');
-    
     const berichtMatch = dagBerichten.find(db => db.dag === ud.dag && db.datum === ud.datum);
-    const subTekst = (berichtMatch && berichtMatch.bericht) ? berichtMatch.bericht : "08:30 aanwezig zijn";
-
-    return `<div id="rooster-${sleutel.replace('|', '_')}" class="dag-rooster ${isActief ? 'active' : ''}">
+    const subTekst = (berichtMatch && berichtMatch.bericht) ? berichtMatch.bericht : '08:30 aanwezig zijn';
+    return `<div id="rooster-${sleutel.replace('|','_')}" class="dag-rooster ${sleutel === actieveDagSleutel ? 'active' : ''}">
       <div class="dag-banner">
         <div class="dag-banner-icon">${sfeeremoji}</div>
         <div>
@@ -753,27 +1007,17 @@ function renderRooster() {
           <div class="dag-banner-sub">${subTekst}</div>
         </div>
       </div>
-      <div id="inhoud-${sleutel.replace('|', '_')}"><div class="loader">Laden…</div></div>
+      <div id="inhoud-${sleutel.replace('|','_')}"><div class="loader">Laden…</div></div>
     </div>`;
   }).join('');
-
-  uniekeDagen.forEach(ud => {
-    const containerId = `inhoud-${`${ud.dag}|${ud.datum}`.replace('|', '_')}`;
-    renderDag(ud.dag, ud.datum, containerId);
-  });
+  uniekeDagen.forEach(ud => renderDag(ud.dag, ud.datum, `inhoud-${`${ud.dag}|${ud.datum}`.replace('|','_')}`));
 }
 
 function renderDag(dag, datum, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
-
   let blokken = alleBlokken.filter(b => b.dag === dag && b.datum === datum);
-  if (!toonAlles) {
-    blokken = blokken.filter(b => {
-      const p = (b.rooster_personen||[]).map(x => x.naam);
-      return b.voor_iedereen || p.includes(huidigePersoon);
-    });
-  }
+  if (!toonAlles) blokken = blokken.filter(b => b.voor_iedereen || (b.rooster_personen||[]).map(x=>x.naam).includes(huidigePersoon));
   if (!blokken.length) {
     container.innerHTML = `<div class="lege-dag"><span>😴</span>Geen activiteiten ${toonAlles?'gevonden':'voor '+huidigePersoon} op deze dag.</div>`;
     return;
@@ -784,18 +1028,14 @@ function renderDag(dag, datum, containerId) {
     const huidig = isHuidig(b.tijd_start, b.tijd_eind, b.dag, b.datum);
     const emoji = getEmoji(b.titel);
     let badge = '';
-    if (toonAlles && !b.voor_iedereen) {
-      badge = `<div class="badge-alle">👥 ${personen.join(', ')}</div>`;
-    } else if (b.voor_iedereen) {
-      badge = `<div class="badge-iedereen">👥 Iedereen</div>`;
-    } else {
+    if (toonAlles && !b.voor_iedereen) badge = `<div class="badge-alle">👥 ${personen.join(', ')}</div>`;
+    else if (b.voor_iedereen) badge = `<div class="badge-iedereen">👥 Iedereen</div>`;
+    else {
       const anderen = personen.filter(n=>n!==huidigePersoon);
-      badge = anderen.length > 0
-        ? `<div class="badge-mij">★ Met: ${anderen.join(', ')}</div>`
-        : `<div class="badge-mij">★ Alleen jij</div>`;
+      badge = anderen.length > 0 ? `<div class="badge-mij">★ Met: ${anderen.join(', ')}</div>` : `<div class="badge-mij">★ Alleen jij</div>`;
     }
     return `<div class="activiteit-card c-${b.kleur||'blauw'} ${isVoorMij&&!toonAlles?'voor-mij':''} ${huidig?'huidig':''}">
-      ${huidig ? '<div class="huidig-badge">▶ Nu bezig</div>' : ''}
+      ${huidig?'<div class="huidig-badge">▶ Nu bezig</div>':''}
       <div class="activiteit-zijbalk"></div>
       <div class="activiteit-body">
         <div class="activiteit-tijd">
@@ -812,38 +1052,19 @@ function renderDag(dag, datum, containerId) {
   }).join('');
 }
 
-// ── ROL ONDERAAN TONEN ──
 function toonHuidigePersoonVariabele() {
   const container = document.getElementById('persoon-variabele-container');
   if (!container) return;
-
-  if (!persoonVariabelen || persoonVariabelen.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
-
-  // Toont de rol/variabele van degene die in het rooster (dropdown) is geselecteerd
   const pv = persoonVariabelen.find(p => p.naam.toLowerCase() === huidigePersoon.toLowerCase());
-
-  if (!pv || !pv.variabele) {
-    container.innerHTML = '';
-    return;
-  }
-
+  if (!pv || !pv.variabele) { container.innerHTML = ''; return; }
   container.innerHTML = `
-    <div style="background: var(--bg2); padding: 16px; border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);">
-      <h3 style="margin-top:0; color:var(--accent); font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;"><span>🎭</span> Rol / Info voor ${pv.naam}</h3>
-      <div style="font-size: 14px; padding: 12px; background: var(--bg3); border-radius: 8px; color: var(--text); font-weight: 500;">
-        ${pv.variabele}
-      </div>
-    </div>
-  `;
+    <div style="background:var(--bg2);padding:16px;border-radius:var(--radius);margin-top:20px;border:1px solid var(--border);box-shadow:var(--shadow);">
+      <h3 style="margin-top:0;color:var(--accent);font-size:16px;margin-bottom:12px;">🎭 Rol / Info voor ${pv.naam}</h3>
+      <div style="font-size:14px;padding:12px;background:var(--bg3);border-radius:8px;color:var(--text);font-weight:500;">${pv.variabele}</div>
+    </div>`;
 }
 
-function switchDag(sleutel) {
-  actieveDagSleutel = sleutel;
-  renderRooster();
-}
+function switchDag(sleutel) { actieveDagSleutel = sleutel; renderRooster(); }
 
 function toggleFilter() {
   toonAlles = !toonAlles;
@@ -854,12 +1075,10 @@ function toggleFilter() {
 }
 
 // ── ADMIN ──
-function toggleAdmin() { 
+function toggleAdmin() {
   const panel = document.getElementById('admin-panel');
   panel.classList.toggle('open');
-  if (panel.classList.contains('open')) {
-    vulAdminExtraSelects();
-  }
+  if (panel.classList.contains('open')) vulAdminExtraSelects();
 }
 
 function vulAdminCheckboxes() {
@@ -869,14 +1088,9 @@ function vulAdminCheckboxes() {
 
 function vulAdminExtraSelects() {
   const pSelect = document.getElementById('admin-persoon-select');
-  if (pSelect && pSelect.options.length <= 1) {
-    pSelect.innerHTML = '<option value="">Kies persoon...</option>' + NAMEN.map(n => `<option value="${n}">${n}</option>`).join('');
-  }
-  
+  if (pSelect && pSelect.options.length <= 1) pSelect.innerHTML = '<option value="">Kies persoon...</option>' + NAMEN.map(n=>`<option value="${n}">${n}</option>`).join('');
   const dSelect = document.getElementById('admin-dag-select');
-  if (dSelect && uniekeDagen.length > 0) {
-    dSelect.innerHTML = '<option value="">Kies dag...</option>' + uniekeDagen.map(ud => `<option value="${ud.dag}|${ud.datum}">${ud.dag} ${ud.datum}</option>`).join('');
-  }
+  if (dSelect && uniekeDagen.length > 0) dSelect.innerHTML = '<option value="">Kies dag...</option>' + uniekeDagen.map(ud=>`<option value="${ud.dag}|${ud.datum}">${ud.dag} ${ud.datum}</option>`).join('');
 }
 
 function selectAllPersonen(val) { document.querySelectorAll('#personen-checkboxes input').forEach(cb=>cb.checked=val); }
@@ -890,14 +1104,11 @@ async function slaBlokOp() {
   const kleur = document.getElementById('f-kleur').value;
   const ges   = [...document.querySelectorAll('#personen-checkboxes input:checked')].map(c=>c.value);
   const ieder = ges.length === NAMEN.length;
-  
   if (!titel||!datumVal||!start||!eind) { showToast('Vul alle verplichte velden in!',true); return; }
-  
   const d = new Date(datumVal);
-  const dag = DAG_NAMEN[d.getDay()]; 
-  const datum = `${d.getDate()} ${MAAND_NAMEN[d.getMonth()]}`; 
-
-  const data  = {dag, datum, tijd_start:start, tijd_eind:eind, titel, locatie:loc, kleur, voor_iedereen:ieder};
+  const dag = DAG_NAMEN[d.getDay()];
+  const datum = `${d.getDate()} ${MAAND_NAMEN[d.getMonth()]}`;
+  const data = {dag, datum, tijd_start:start, tijd_eind:eind, titel, locatie:loc, kleur, voor_iedereen:ieder};
   try {
     let blokId;
     if (editId) {
@@ -914,9 +1125,7 @@ async function slaBlokOp() {
 }
 
 function resetForm() {
-  ['f-titel','f-datum','f-start','f-eind','f-locatie'].forEach(id=>{
-    if(document.getElementById(id)) document.getElementById(id).value='';
-  });
+  ['f-titel','f-datum','f-start','f-eind','f-locatie'].forEach(id=>{ if(document.getElementById(id)) document.getElementById(id).value=''; });
   document.getElementById('f-kleur').value='blauw';
   selectAllPersonen(false); editId=null;
   document.getElementById('save-btn').textContent='💾 Opslaan';
@@ -936,17 +1145,13 @@ function renderAdminLijst() {
 function editBlok(id) {
   const b=alleBlokken.find(x=>x.id===id); if(!b) return;
   document.getElementById('f-titel').value=b.titel;
-  
   if (b.datum) {
     const [dagDeel, maandDeel] = b.datum.split(' ');
     const maandIndex = MAAND_NAMEN.indexOf(maandDeel?.toLowerCase());
     if (maandIndex !== -1) {
-      const mm = String(maandIndex + 1).padStart(2, '0');
-      const dd = String(dagDeel).padStart(2, '0');
-      document.getElementById('f-datum').value = `2026-${mm}-${dd}`;
+      document.getElementById('f-datum').value = `2026-${String(maandIndex+1).padStart(2,'0')}-${String(dagDeel).padStart(2,'0')}`;
     }
   }
-
   document.getElementById('f-start').value=b.tijd_start;
   document.getElementById('f-eind').value=b.tijd_eind;
   document.getElementById('f-locatie').value=b.locatie||'';
@@ -963,7 +1168,6 @@ async function verwijderBlok(id) {
   catch(e) { showToast('Fout: '+e.message,true); }
 }
 
-// ── ADMIN: DAG BERICHTEN & PERSOON VARIABELEN ──
 function laadSpecifiekDagBericht() {
   const val = document.getElementById('admin-dag-select').value;
   if(!val) return;
@@ -977,20 +1181,13 @@ async function slaDagBerichtOp() {
   const bericht = document.getElementById('admin-dag-bericht').value.trim();
   if(!val) return showToast('Kies eerst een dag', true);
   const [dag, datum] = val.split('|');
-
   try {
     const match = dagBerichten.find(b => b.dag === dag && b.datum === datum);
-    if (match) {
-      await sbFetch(`/dag_berichten?id=eq.${match.id}`, 'PATCH', { bericht });
-    } else {
-      await sbFetch(`/dag_berichten`, 'POST', { dag, datum, bericht });
-    }
+    if (match) await sbFetch(`/dag_berichten?id=eq.${match.id}`, 'PATCH', { bericht });
+    else await sbFetch('/dag_berichten', 'POST', { dag, datum, bericht });
     showToast('Dagbericht opgeslagen!');
-    
-    // Herlaad
-    const dbRes = await sbFetch('/dag_berichten?select=*');
-    dagBerichten = dbRes || [];
-    renderRooster(); 
+    dagBerichten = await sbFetch('/dag_berichten?select=*') || [];
+    renderRooster();
   } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
@@ -1005,44 +1202,45 @@ async function slaPersoonVariabeleOp() {
   const naam = document.getElementById('admin-persoon-select').value;
   const variabele = document.getElementById('admin-persoon-variabele').value.trim();
   if(!naam) return showToast('Kies eerst een persoon', true);
-
   try {
     const match = persoonVariabelen.find(p => p.naam === naam);
-    if (match) {
-      await sbFetch(`/persoon_variabelen?id=eq.${match.id}`, 'PATCH', { variabele });
-    } else {
-      await sbFetch(`/persoon_variabelen`, 'POST', { naam, variabele });
-    }
+    if (match) await sbFetch(`/persoon_variabelen?id=eq.${match.id}`, 'PATCH', { variabele });
+    else await sbFetch('/persoon_variabelen', 'POST', { naam, variabele });
     showToast('Rol opgeslagen!');
-    
-    // Herlaad
-    const pvRes = await sbFetch('/persoon_variabelen?select=*');
-    persoonVariabelen = pvRes || [];
+    persoonVariabelen = await sbFetch('/persoon_variabelen?select=*') || [];
     toonHuidigePersoonVariabele();
   } catch(e) { showToast('Fout: ' + e.message, true); }
 }
 
 // ── HANDMATIGE NOTIFICATIES ──
+function voorbeeldNotifAfbeelding(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('c-notif-preview').src = e.target.result;
+    document.getElementById('c-notif-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('c-notif-afbeelding').value = '';
+}
+
 function openCustomNotifModal() {
+  uploadedNotifAfbeeldingUrl = '';
   document.getElementById('custom-notif-modal').style.display = 'flex';
   document.getElementById('c-notif-titel').value = '';
   document.getElementById('c-notif-body').value = '';
   document.getElementById('c-notif-afbeelding').value = '';
+  document.getElementById('c-notif-preview').style.display = 'none';
+  document.getElementById('c-notif-upload').value = '';
   document.getElementById('c-notif-doelgroep').value = 'iedereen';
-  
-  const naamSelect = document.getElementById('c-notif-naam');
-  naamSelect.innerHTML = '<option value="">Kies persoon...</option>' + 
-    NAMEN.map(n => `<option value="${n}">${n}</option>`).join('');
+  document.getElementById('c-notif-naam').innerHTML = '<option value="">Kies persoon...</option>' + NAMEN.map(n=>`<option value="${n}">${n}</option>`).join('');
   toggleCustomNotifNaam();
 }
 
-function sluitCustomNotifModal() {
-  document.getElementById('custom-notif-modal').style.display = 'none';
-}
-
+function sluitCustomNotifModal() { document.getElementById('custom-notif-modal').style.display = 'none'; }
 function toggleCustomNotifNaam() {
-  const dg = document.getElementById('c-notif-doelgroep').value;
-  document.getElementById('c-notif-naam-container').style.display = dg === 'specifiek' ? 'block' : 'none';
+  document.getElementById('c-notif-naam-container').style.display = document.getElementById('c-notif-doelgroep').value === 'specifiek' ? 'block' : 'none';
 }
 
 async function verstuurCustomNotificatie() {
@@ -1050,34 +1248,28 @@ async function verstuurCustomNotificatie() {
   const naam = document.getElementById('c-notif-naam').value;
   const titel = document.getElementById('c-notif-titel').value.trim();
   const body = document.getElementById('c-notif-body').value.trim();
-  const afbeelding = document.getElementById('c-notif-afbeelding').value.trim();
+  const urlVeld = document.getElementById('c-notif-afbeelding').value.trim();
+  const uploadFile = document.getElementById('c-notif-upload').files[0];
 
   if (!titel || !body) { showToast('Titel en bericht zijn verplicht!', true); return; }
   if (doelgroep === 'specifiek' && !naam) { showToast('Kies een ontvanger!', true); return; }
 
   const btn = document.getElementById('btn-stuur-c-notif');
   btn.disabled = true;
-  btn.innerText = 'Verzenden...';
+  btn.textContent = 'Verzenden…';
 
   try {
-    const EDGE_FUNCTION_URL = 'https://tuualasepvtlgclxqpeu.supabase.co/functions/v1/send-notifications'; 
-    
-    const response = await fetch(EDGE_FUNCTION_URL, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY
-      },
-      body: JSON.stringify({ 
-        actie: 'handmatig', 
-        doelgroep, 
-        naam, 
-        titel, 
-        body, 
-        afbeelding: afbeelding || null 
-      })
-    });
+    let afbeelding = urlVeld || uploadedNotifAfbeeldingUrl || null;
+    if (uploadFile) {
+      afbeelding = await uploadNaarSupabase(uploadFile, 'c-progress-bar', 'c-upload-progress');
+      uploadedNotifAfbeeldingUrl = afbeelding;
+    }
 
+    const response = await fetch(`${SB_URL}/functions/v1/send-notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+      body: JSON.stringify({ actie: 'handmatig', doelgroep, naam, titel, body, afbeelding })
+    });
     const result = await response.json();
     if (response.ok && result.ok) {
       showToast(`✅ Succes: ${result.msg}`);
@@ -1085,12 +1277,11 @@ async function verstuurCustomNotificatie() {
     } else {
       showToast(`❌ Fout: ${result.error || result.msg}`, true);
     }
-  } catch (error) {
-    console.error('Verzendfout:', error);
-    showToast('Netwerkfout bij Edge Function (zie console).', true);
+  } catch(e) {
+    showToast('Netwerkfout bij Edge Function.', true);
   } finally {
     btn.disabled = false;
-    btn.innerText = '🚀 Verzenden';
+    btn.textContent = '🚀 Verzenden';
   }
 }
 
@@ -1106,21 +1297,16 @@ function selectAllPrint(val) { document.querySelectorAll('.print-cb').forEach(cb
 function printRoosters() {
   const ges=[...document.querySelectorAll('.print-cb:checked')].map(c=>c.value);
   if(!ges.length){showToast('Selecteer minstens 1 persoon',true);return;}
-  
   bepaalUniekeDagen();
-
   document.getElementById('print-area').innerHTML = ges.map(naam => {
-    const paginaInhoud = uniekeDagen.map(ud => maakPrintPagina(naam, ud.dag, `${ud.datum} 2026`)).join('');
-    return `<div class="print-page">${paginaInhoud}</div>`;
+    return `<div class="print-page">${uniekeDagen.map(ud => maakPrintPagina(naam, ud.dag, `${ud.datum} 2026`)).join('')}</div>`;
   }).join('');
-  
   closePrintModal(); window.print();
 }
 
 function maakPrintPagina(naam, dag, datum) {
   const kaleDatum = datum.replace(' 2026', '');
   const blokken = alleBlokken.filter(b => b.dag === dag && b.datum === kaleDatum && (b.voor_iedereen || (b.rooster_personen||[]).map(p=>p.naam).includes(naam)));
-  
   const rijen = blokken.length
     ? blokken.map(b => `<tr>
         <td style="padding:8px 12px;font-size:13px;color:#555;white-space:nowrap;border-bottom:1px solid #eee">${b.tijd_start}–${b.tijd_eind}</td>
@@ -1129,7 +1315,6 @@ function maakPrintPagina(naam, dag, datum) {
         <td style="padding:8px 12px;font-size:11px;border-bottom:1px solid #eee">${b.voor_iedereen?'Iedereen':'Jij'}</td>
       </tr>`).join('')
     : `<tr><td colspan="4" style="padding:16px;color:#aaa;text-align:center">Geen activiteiten</td></tr>`;
-    
   return `<div style="margin-bottom:28px">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
       <div style="font-size:28px">🎭</div>
