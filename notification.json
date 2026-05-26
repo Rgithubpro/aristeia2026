@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "title": "Onderhoud",
   "message": "De database is tijdelijk offline voor een update. Bepaalde functies zoals je rooster zien, info en eigenlijk alles werken mogelijk niet."
 }
