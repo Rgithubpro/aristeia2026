@@ -246,6 +246,37 @@
     .activiteit-body { flex-direction: column; align-items: flex-start; gap: 8px; }
     .info-container { padding: 14px; }
   }
+  .notification-banner {
+  background-color: #ffcc00; /* Opvallende waarschuwingskleur */
+  color: #333;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: sans-serif;
+  border-bottom: 2px solid #e6b800;
+  z-index: 9999;
+  position: relative; /* Of 'fixed' als hij altijd bovenaan het scherm moet blijven */
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+}
+
+#notif-title {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+#close-notif {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5Y51NLTM06"></script>
 <script>
@@ -258,6 +289,14 @@
 
 </head>
 <body>
+
+<div id="system-notification" class="notification-banner" style="display: none;">
+  <div class="notification-content">
+    <strong id="notif-title"></strong>
+    <span id="notif-message"></span>
+  </div>
+  <button id="close-notif" onclick="document.getElementById('system-notification').style.display='none'">×</button>
+</div>
 
 <div id="login-screen" class="screen active">
   <div class="login-card">
@@ -1449,6 +1488,32 @@ function maakPrintPagina(naam, dag, datum) {
   </div>`;
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Haal het JSON bestand op
+  fetch('notification.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Netwerk response was niet ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Check of de notificatie aan staat
+      if (data.active === true) {
+        // Vul de tekst in
+        document.getElementById('notif-title').textContent = data.title;
+        document.getElementById('notif-message').textContent = data.message;
+        
+        // Laat de banner zien
+        document.getElementById('system-notification').style.display = 'flex';
+      }
+    })
+    .catch(error => {
+      console.error('Fout bij het ophalen van de notificatie:', error);
+      // Als het bestand niet gevonden wordt, doen we niks (banner blijft verborgen)
+    });
+});
+  
 // ── TOAST ──
 function showToast(msg, error=false) {
   const t=document.getElementById('toast');
