@@ -904,7 +904,8 @@ function openArtikelModal(id = null) {
   document.getElementById('a-afb-upload').value = '';
 
   if (id) {
-    const a = alleArtikelen.find(x => x.id === id);
+    // FIX: String() toegevoegd zodat het type niet meer uitmaakt
+    const a = alleArtikelen.find(x => String(x.id) === String(id));
     if (a) {
       document.getElementById('artikel-modal-titel').textContent = '✏️ Artikel Bewerken';
       document.getElementById('a-titel').value = a.titel;
