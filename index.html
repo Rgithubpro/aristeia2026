@@ -131,16 +131,13 @@
   .info-container { padding: 20px; flex: 1; max-width: 720px; margin: 0 auto; width: 100%; }
   .artikel-card { background: var(--bg2); border-radius: var(--radius); border: 1.5px solid var(--border); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 18px; }
   
-  /* Object fit is contain met pointer cursor voor afbeeldingen */
   .artikel-afbeelding { width: 100%; max-height: 280px; object-fit: contain; background: var(--bg3); display: block; cursor: zoom-in; }
   
   .artikel-body { padding: 18px 20px; }
   .artikel-titel { font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
   .artikel-tekst { font-size: 14px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
   
-  /* Iframe opmaak (voor Excel/Word embeds) */
   .artikel-tekst iframe { max-width: 100%; border-radius: var(--radius-sm); margin: 10px 0; border: 1px solid var(--border); display: block; }
-  /* Custom styling voor klikbare links */
   .custom-link { color: var(--accent); font-weight: 600; text-decoration: underline; cursor: pointer; }
   .custom-link:hover { color: var(--accent2); }
 
@@ -169,7 +166,6 @@
   #notif-modal, #pwa-modal, #print-modal, #custom-notif-modal, #persoon-info-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
   #notif-modal.open, #print-modal.open, #persoon-info-modal.open { display: flex; }
   
-  /* Image modal CSS */
   #image-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; flex-direction: column; }
   #image-modal.open { display: flex; }
   #image-modal img { max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -247,7 +243,7 @@
     .info-container { padding: 14px; }
   }
   .notification-banner {
-  background-color: #ffcc00; /* Opvallende waarschuwingskleur */
+  background-color: #ffcc00; 
   color: #333;
   padding: 15px 20px;
   display: flex;
@@ -256,7 +252,7 @@
   font-family: sans-serif;
   border-bottom: 2px solid #e6b800;
   z-index: 9999;
-  position: relative; /* Of 'fixed' als hij altijd bovenaan het scherm moet blijven */
+  position: relative; 
 }
 
 .notification-content {
@@ -596,14 +592,25 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 <script>
 // ── CONFIG ──
-const WACHTWOORD = '3Dwint!';
-const ADMIN_WW   = '3DAdmin!!';
+// Vervang deze door de ECHTE SHA-256 hashes van je wachtwoorden.
+// Genereer ze eenmalig via: https://emn178.github.io/online-tools/sha256.html
+const WACHTWOORD_HASH = 'a13dbc5b901cece43da7145e8ee7b4f1e53f0116b3bfd2c1925b3027121fa380'; 
+const ADMIN_WW_HASH   = '674a4354c9b62d25001148f724ea2076cc6a4ff5d57c30a257cf5b0366caf94a'; 
+
 const VAPID_KEY  = 'BCXl8cpATHcRLsDM51LSyGE8JGEMcEp9AAlJjXh8EUpNT_SOTZvVtryaWaU9Bmvs9auLhM2acL5WfPgKVoIDIAg';
 const SB_URL     = 'https://tuualasepvtlgclxqpeu.supabase.co';
 const SB_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1dWFsYXNlcHZ0bGdjbHhxcGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNTYzNzMsImV4cCI6MjA5NDkzMjM3M30.ZlTKh5HKvqmDOP4W-fL7oG5ErPqnqZEs2K181x6amMY';
 const NAMEN = ['Aakash','Abel','Ayse','Daniël','Hein','Hidde','Jip','Laili','Levi','Lukas','Mannat','Mare','Marijn','Max','Mehyar','Noor','Ralph','Safia','Sami','Stine','Tamar','Thijme','Thorsten','Tobias','Wams'];
 const MAAND_NAMEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const DAG_NAMEN = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
+
+// ── FUNCTIE OM WACHTWOORD TE HASHEN ──
+async function hashWachtwoord(tekst) {
+  const msgBuffer = new TextEncoder().encode(tekst);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 // ── FIREBASE ──
 firebase.initializeApp({
@@ -644,8 +651,8 @@ let dagBerichten = [];
 let persoonVariabelen = [];
 let alleArtikelen = [];
 let artikelEditId = null;
-let uploadedAfbeeldingUrl = ''; // voor artikel editor
-let uploadedNotifAfbeeldingUrl = ''; // voor notif modal
+let uploadedAfbeeldingUrl = ''; 
+let uploadedNotifAfbeeldingUrl = ''; 
 
 // ── SUPABASE ──
 async function sbFetch(path, method='GET', body=null) {
@@ -717,25 +724,37 @@ async function logOnlineStatus(gekozenNaam) {
     }
 }
 
-// ── AUTO LOGIN ──
-window.addEventListener('DOMContentLoaded', () => {
-  const savedWW   = localStorage.getItem('aristeia_ww');
+// ── AUTO LOGIN (Nu met HASH controle) ──
+window.addEventListener('DOMContentLoaded', async () => {
+  // We slaan nu de hash op, niet het plain-text wachtwoord
+  const savedHash = localStorage.getItem('aristeia_ww_hash');
   const savedNaam = localStorage.getItem('aristeia_naam');
-  if (savedWW) document.getElementById('wachtwoord-input').value = savedWW;
-  if (savedWW && savedNaam && (savedWW === WACHTWOORD || savedWW === ADMIN_WW)) {
-    isAdmin = savedWW === ADMIN_WW;
+  
+  if (savedHash && savedNaam && (savedHash === WACHTWOORD_HASH || savedHash === ADMIN_WW_HASH)) {
+    isAdmin = savedHash === ADMIN_WW_HASH;
     huidigePersoon = savedNaam;
     document.getElementById('onthoud-cb').checked = true;
-    logOnlineStatus(huidigePersoon); // <-- Log automatisch bij startup
+    logOnlineStatus(huidigePersoon); 
     startApp();
   }
 });
 
-function checkWachtwoord() {
+// ── LOGIN VERIFICATIE (Asynchroon vanwege Hashing) ──
+async function checkWachtwoord() {
   const val = document.getElementById('wachtwoord-input').value.trim();
-  if (val === WACHTWOORD || val === ADMIN_WW) {
-    isAdmin = val === ADMIN_WW;
-    if (document.getElementById('onthoud-cb').checked) localStorage.setItem('aristeia_ww', val);
+  
+  // Hash de input direct
+  const hash = await hashWachtwoord(val);
+
+  // Vergelijk met de opgeslagen hashes
+  if (hash === WACHTWOORD_HASH || hash === ADMIN_WW_HASH) {
+    isAdmin = hash === ADMIN_WW_HASH;
+    
+    // Als we het onthouden, sla dan alléén de hash op in localStorage
+    if (document.getElementById('onthoud-cb').checked) {
+      localStorage.setItem('aristeia_ww_hash', hash);
+    }
+    
     toonScherm('naam-screen');
     vulNaamGrid();
   } else {
@@ -757,7 +776,7 @@ function vulNaamGrid() {
 async function kiesNaam(naam) {
   huidigePersoon = naam;
   localStorage.setItem('aristeia_naam', naam);
-  logOnlineStatus(naam); // <-- Log direct als gebruiker z'n naam kiest
+  logOnlineStatus(naam);
   startApp();
 }
 
@@ -778,7 +797,7 @@ function wisselPersoon(naam) {
   renderRooster();
   toonHuidigePersoonVariabele();
   checkPersoonPopup(huidigePersoon);
-  logOnlineStatus(naam); // <-- Log ook als je via het menu wisselt van naam
+  logOnlineStatus(naam); 
 }
 
 // ── IMAGE MODAL LOGICA ──
@@ -904,7 +923,6 @@ function openArtikelModal(id = null) {
   document.getElementById('a-afb-upload').value = '';
 
   if (id) {
-    // FIX: String() toegevoegd zodat het type niet meer uitmaakt
     const a = alleArtikelen.find(x => String(x.id) === String(id));
     if (a) {
       document.getElementById('artikel-modal-titel').textContent = '✏️ Artikel Bewerken';
@@ -1490,7 +1508,6 @@ function maakPrintPagina(naam, dag, datum) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Haal het JSON bestand op
   fetch('notification.json')
     .then(response => {
       if (!response.ok) {
@@ -1499,19 +1516,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then(data => {
-      // Check of de notificatie aan staat
       if (data.active === true) {
-        // Vul de tekst in
         document.getElementById('notif-title').textContent = data.title;
         document.getElementById('notif-message').textContent = data.message;
-        
-        // Laat de banner zien
         document.getElementById('system-notification').style.display = 'flex';
       }
     })
     .catch(error => {
       console.error('Fout bij het ophalen van de notificatie:', error);
-      // Als het bestand niet gevonden wordt, doen we niks (banner blijft verborgen)
     });
 });
   
